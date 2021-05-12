@@ -219,6 +219,3 @@ JS引擎执行顺序
   2. MutaionObserver
   3. Object.observe（已废弃；Proxy 对象替代）
   4. process.nextTick（Node.js）
-
-### 7.3 Async和Await
-async函数返回一个 Promise 对象，可以使用then方法添加回调函数。当函数执行的时候，一旦遇到await就会先返回，等到异步操作完成，再接着执行函数体内后面的语句。

@@ -159,7 +159,7 @@ window.name属性的独特之处：name值在不同的页面（甚至不同域�
 
 实现原理：两个页面都通过js强制设置document.domain为基础主域，就实现了同域。
 
-我们看个例子：页面a.zf1.cn:3000/a.html获取页面b.zf1.cn:3000/b.html中a的值
+我们看个例子：页面`a.zf1.cn:3000/a.html`获取页面`b.zf1.cn:3000/b.html`中a的值
 
 ## 总结
 - CORS支持所有类型的HTTP请求，是跨域HTTP请求的根本解决方案
