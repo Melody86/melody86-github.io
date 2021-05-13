@@ -273,3 +273,55 @@ function _new(fn,...rest){
 }
 ```
 
+## 8. 函数节流和防抖
+为了解决函数高频率触发，浏览器无法正常响应的情况。
+[可视化](http://demo.nimius.net/debounce_throttle/)
+
+### 8.1 防抖 (debounce)
+函数防抖，就是指触发时间后在规定时间内函数只能执行一次，如果在规定时间内又触发了事件，则会重新计算函数执行时间。
+
+**实现**
+```js
+function debounce(fn, delay){
+  let timer;
+  return function(){
+    clearTimeout(timer);  //触发函数时, 重置
+    timer = setTimeout(()=>{
+      fn.apply(this, arguments);
+    }, delay)
+  }
+}
+```
+
+应用场景
+(连续事件触发一次)
+- 搜索框搜索输入。只需用户最后一次输入完，再发送请求
+- 手机号、邮箱验证输入检测
+- 窗口大小Resize。只需窗口调整完成后，计算窗口大小。防止重复渲染。
+
+### 8.2 节流(throttle)
+限制一个函数在规定时间内只能执行一次。即连续触发事件时，在 n 秒中只执行一次函数。
+
+**实现**
+```js
+function throttle(fn, delay){
+  let isAvaliabed = true;
+  return function(){
+    const self = this;
+    if(self.isAvaliabed){
+      self.isAvaliabed = false;
+      setTimeout(()=>{
+        fn.bind(self, arguments);
+        self.isAvaliabled = true;
+      }, delay)
+    }
+  }
+}
+```
+
+应用场景
+
+- 滚动加载，加载更多或滚动底部监听
+- 谷歌搜索框，搜索联想功能
+- 高频点击提交，表单重复提交。
+
