@@ -93,8 +93,8 @@ myPromise.prototype.all = function(promiseArray){
 }
 ```
 
-### 7.5 原型链与继承
-#### 7.5.1 构造函数constructor
+### 7.6 原型链与继承
+#### 7.6.1 构造函数constructor
 每个类都有一个默认无参的构造函数，初始化该类(new)的时候，先走构造函数，用于初始化成员变量和方法。
 
     在构造函数中使用时，super关键字将单独出现，并且必须在使用this关键字之前使用。
@@ -125,17 +125,17 @@ Star.sex = '女';
     (4) 为新对象属性赋值son.name
     (5) 返回this return this，此时的新对象就拥有了构造函数的方法和属性了
 
-#### 7.5.2 原型
+#### 7.6.2 原型
 
 每一个javascript对象(除null外)创建的时候，都会与之关联另一个对象（父类对象），这个父类对象就是我们所说的原型，每一个对象都会从原型中“继承”属性。
 
 JS中，每个函数都有一个prototype属性，这个属性指向函数的原型对象。
-#### 7.5.3 原型链
+#### 7.6.3 原型链
 原型与原型之间通过__proto__层层串起来的直到Object.prototype.__proto__为null的链叫做原型链
 
 ![avatar](https://upload-images.jianshu.io/upload_images/1490251-3089c135df71c956.png?imageMogr2/auto-orient/strip|imageView2/2/w/604/format/webp)
 
-#### 7.5.4 继承
+#### 7.6.4 继承
 继承方式
 
 原型链继承、构造函数继承、原型链+借用构造函数的组合继承、ES6中class 的继承、组合继承优化1、组合继承优化2
@@ -203,7 +203,7 @@ JS中，每个函数都有一个prototype属性，这个属性指向函数的原
   缺点：
   - 调用了两次父类构造函数，生成了两份实例
 
-### 7.6 bind、apply、call
+### 7.7 bind、apply、call
 
 call、apply(第二个参数是一个参数数组)、bind都是改变this指向的方法。call、apply立即调用，bind返回绑定函数。
 
