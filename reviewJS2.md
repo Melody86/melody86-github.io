@@ -3,16 +3,9 @@
 ### 7.3 Async和Await
 async function 用于申明一个 function 是异步的； await，用于等待一个异步方法执行完成；async/await是一个用同步思维解决异步问题的方案。
 
-async函数返回的是一个Promise。如果一个async函数的返回值看起来不是promise，那么它将会被隐式地包装在一个promise中。
+async函数返回的是一个Promise。如果一个async函数的返回值不是promise，那么它将会被隐式地包装在一个promise中，可以使用then方法添加回调函数。如果没有在async函数中写return,那么promise对象resolve的值就是undefined
 
-await表达式会暂停整个async函数的执行进程并出让其控制权，只有当其等待的基于promise的异步操作被兑现或被拒绝之后才会恢复进程。promise的解决值会被当作该await表达式的返回值。如果函数体内有一个await表达式，async函数就一定会异步执行。在await表达式之后的代码可以被认为是存在在链式调用的then回调中，多个await表达式都将加入链式调用的then回调中，返回值将作为最后一个then回调的返回值。
-
-
-
-async函数返回一个 Promise 对象，可以使用then方法添加回调函数。当函数执行的时候，一旦遇到await就会先返回，等到异步操作完成，再接着执行函数体内后面的语句。
-
-await 后面接 expression, 返回值为expression的值。
-
+await 后面接 expression, 返回值为expression的值。await表达式会暂停整个async函数的执行进程并出让其控制权。当await后面的函数为promise时，要等resolve或reject返回之后才会恢复进程，promise返回值会作为await表达式的返回结果。当await后面的函数无返回值时表达式结果为undefined。如果函数体内有一个await表达式，async函数就一定会异步执行。在await表达式之后的代码可以被认为是存在在链式调用的then回调中，多个await表达式都将加入链式调用的then回调中，返回值将作为最后一个then回调的返回值
 
 ### 7.5 Promise
 promise是一个对象，是异步编程的一种解决方案，通过链式调用解决回调地狱问题。
@@ -207,7 +200,7 @@ JS中，每个函数都有一个prototype属性，这个属性指向函数的原
 
 call、apply(第二个参数是一个参数数组)、bind都是改变this指向的方法。call、apply立即调用，bind返回绑定函数。
 
-**手写apply**
+**手写 apply**
 ```js
 Function.prototype._Apply = function (content = window, args = []) {//给content和args添加默认值
   if (!(args instanceof Object)) {// 如果第二个参数不是对象的实例,就返回一个错误
@@ -221,7 +214,7 @@ Function.prototype._Apply = function (content = window, args = []) {//给content
   return res
 }
 ```
-**手写call**
+**手写 call**
 ```js
 Function.prototype.Call = function(content=window){// 给执行上下文 添加默认值
   content.fn = this//给 content 添加一个方法指向this；显示绑定this
@@ -234,7 +227,7 @@ Function.prototype.Call = function(content=window){// 给执行上下文 添加�
   return res
 } 
 ```
-**手写bind**
+**手写 bind**
 ```js
 Function.prototype.bind = function() {
   var args = Array.prototype.slice.call(arguments);
@@ -254,7 +247,7 @@ Function.prototype.bind = function() {
 }
 ```
 
-**手写new**
+**手写 new**
 
 new 操作运算符
 - 创建一个新的对象
@@ -324,4 +317,23 @@ function throttle(fn, delay){
 - 滚动加载，加载更多或滚动底部监听
 - 谷歌搜索框，搜索联想功能
 - 高频点击提交，表单重复提交。
+
+### 8.3 其他
+- 块级： div p ul li form h
+- 行内： em span a strong label
+- W3C模型：width = content； IE模型：width = padding+broder+content
+- 301 永久重定向，302 临时重定向，强缓存返回状态码200，协商缓存返回状态码304not modified (Last Modified & Etag)；
+- 比较大的JS、CSS文件会丢进磁盘，反之丢进内存；内存使用率比较高的时候，文件优先进入磁盘；
+
+  BFC(block formatting context) 块级格式化上下文
+  内部的box会在垂直方向上，一个接一个的放置
+  Box垂直方向的距离由margin决定，属于同一个BFC的两个相邻box的margin会发生重叠
+  BFC区域不会与float box重叠
+  BFC就是页面上一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。
+
+  利用BFC避免margin重叠，外层用div包裹
+  清除浮动：overflow: hidden
+
+- 进程：CPU资源分配最小单位，可包含多个线程
+- 线程：CPU调度的最小单位，同进程下的线程共享程序的内存空间
 
