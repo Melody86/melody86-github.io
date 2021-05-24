@@ -43,3 +43,12 @@
 [8.1 防抖 (debounce)](https://melody86.github.io/melody86-github.io/reviewJS2)
 
 [8.2 节流(throttle)](https://melody86.github.io/melody86-github.io/reviewJS2)
+
+[9. vue原理](https://melody86.github.io/melody86-github.io/vue2&vue3)
+
+1. 生命周期
+2. 双向绑定
+3. Vue3、Vue2区别
+4. 组件化
+5. 传值
+6. diff算法

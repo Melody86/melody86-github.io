@@ -207,12 +207,16 @@ JS中，每个函数都有一个prototype属性，这个属性指向函数的原
 
 call、apply(第二个参数是一个参数数组)、bind都是改变this指向的方法。call、apply立即调用，bind返回绑定函数。
 
+注意异常处理、fn = this找到要执行的函数、返回函数执行结果
+
+
 **手写apply**
 ```js
 Function.prototype._Apply = function (content = window, args = []) {//给content和args添加默认值
   if (!(args instanceof Object)) {// 如果第二个参数不是对象的实例,就返回一个错误
       throw new TypeError('Create List From Array Like called on non-object');
   }
+  const fn = Symbol();  //指定唯一属性，防止delete删除错误
   // 显示绑定函数this
   content.fn = this;
   // 执行fn方法,并接受返回值
@@ -224,6 +228,7 @@ Function.prototype._Apply = function (content = window, args = []) {//给content
 **手写call**
 ```js
 Function.prototype.Call = function(content=window){// 给执行上下文 添加默认值
+  const fn = Symbol();  //指定唯一属性，防止delete删除错误
   content.fn = this//给 content 添加一个方法指向this；显示绑定this
   // 获取第一个参数以后的所有参数
   const args = Array.from(arguments).slice(1);
@@ -233,6 +238,11 @@ Function.prototype.Call = function(content=window){// 给执行上下文 添加�
   delete content.fn;
   return res
 } 
+
+注意: 参数拼接、返回函数<br>
+new调用时this为fn的实例，否则fn执行上下文为入参context<br>
+关联返回函数的原型, 避免在this上直接操作
+
 ```
 **手写bind**
 ```js
@@ -240,16 +250,18 @@ Function.prototype.bind = function() {
   var args = Array.prototype.slice.call(arguments);
   var context = args.splice(0,1)[0];
   var fn = this;
-  var noop = function() {}
+  var temp = function() {};
   var res =  function() {
       let rest = Array.prototype.slice.call(arguments);
-      // this只和运行的时候有关系，所以这里的this和上面的fn不是一码事，new res()和res()在调用的时候，res中的this是不同的东西
-      return fn.apply(this instanceof noop ? this : context, args.concat(rest));
+      // 如果new被调用, new绑定this优先级高, this应该指向fn的实例 
+      // new运算符时 因为维护过原型，所以this既是temp的实例，也是fn的实例
+      return fn.apply(this instanceof temp ? this : context, args.concat(rest));
   }
+  //维护res的原型, 避免直接在this上操作
   if(this.prototype) {
-      noop.prototype = this.prototype;
+      temp.prototype = this.prototype;
   }
-  res.prototype = new noop();
+  res.prototype = new temp();
   return res;
 }
 ```
@@ -269,7 +281,8 @@ function _new(fn,...rest){
   //将thisObj作为fn的this，继承其属性，并获取返回结果为result
   const result = fn.apply(thisObj,rest);
   //根据result对象的类型决定返回结果
-  return typeof result === "object" ? result : thisObj;
+  // 正常规定,如何fn返回的是null或undefined(也就是不返回内容),我们返回的是obj,否则返回 result
+  return result instanceof Object ? result : thisObj;
 }
 ```
 

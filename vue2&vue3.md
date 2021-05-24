@@ -101,7 +101,6 @@ https://zhuanlan.zhihu.com/p/45081605
     当你利用索引直接设置一个数组项时，例如：`vm.items[indexOfItem] = newValue`
     当你修改数组的长度时，例如：`vm.items.length = newLength`
 
-### 2.2 依赖收集
 
 ```js
 /**
