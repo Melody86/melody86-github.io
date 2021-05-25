@@ -234,14 +234,3 @@ JS引擎执行顺序
 数字签名的作用主要是：确保发送的报文没有被篡改
 非对称加密主要应用在密钥协商阶段，协商好密钥之后的通信就用对称加密了
 
-将一个类数组对象或者可遍历对象转换成一个真正的数组:
-
-Array.from、Array.prototype.slice.call
-
-```js
-var person = { name: 'Jack' }
-typeof person           //string
-typeof {}               //object
-typeof { name: 'Jack' } //object
-```
-

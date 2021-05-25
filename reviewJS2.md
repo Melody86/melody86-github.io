@@ -272,10 +272,29 @@ function _new(fn,...rest){
   const thisObj = Object.create(fn.prototype);
   //将thisObj作为fn的this，继承其属性，并获取返回结果为result
   const result = fn.apply(thisObj,rest);
-  //根据result对象的类型决定返回结果
+  //根据result对象的类型决定返回结果, result 通过Object.create创建是Object的实例
   // 正常规定,如何fn返回的是null或undefined(也就是不返回内容),我们返回的是obj,否则返回 result
   return result instanceof Object ? result : thisObj;
+  // 或者用下面方式判断
+  // const isObject = typeof res === "object" && res !== null;
+  // const isFunction = typeof res === "function";
+  // return isObject || isFunction ? res : obj;
 }
+```
+**手写 instanceof**
+
+```js
+const myInstanceof = (left, right) => {
+  if (typeof left !== "object" || left === null) {
+    return false;
+  }
+  let proto = Object.getPrototypeOf(left);
+  while (true) {
+    if (proto === null) return false;
+    if (proto === right.prototype) return true;
+    proto = Object.getPrototypeOf(proto);
+  }
+};
 ```
 
 ## 8. 函数节流和防抖
@@ -349,3 +368,193 @@ function throttle(fn, delay){
 - 进程：CPU资源分配最小单位，可包含多个线程
 - 线程：CPU调度的最小单位，同进程下的线程共享程序的内存空间
 
+## JS 手写
+// 类数组转化为数组
+
+```js
+const toArr = (likeArr) => {
+  const a1 = Array.from(likeArr);
+  const a2 = Array.prototype.slice.call(likeArr);
+  const a3 = [...likeArr];
+  const a4 = Array.prototype.concat.apply([], likeArr);
+};
+```
+// 函数珂里化
+```js
+function add(...args) {
+  const totalArgs = [...args];
+  function f(...args2) {
+    totalArgs.push(...args2);
+    return f;
+  }
+  f.toString = () => {
+    return totalArgs.reduce((prev, curr) => prev + curr, 0);
+  };
+  return f;
+}
+// console.log(add(1, 2, 3)(4)(5).toString());
+```
+
+// 图片懒加载
+```js
+function lazyload() {
+  const imgs = document.querySelectorAll("img");
+  // 视口高度
+  const viewHeight = document.documentElement.clientHeight;
+  // 滚动条高度
+  const scrollHeight =
+    document.documentElement.scrollTop || document.body.scrollTop;
+  // 整个页面高度
+  // document.documentElement.scrollHeight
+  for (let i = 0; i < imgs.length; i++) {
+    const offsetTop = imgs[i].offsetTop;
+    if (offsetTop < viewHeight + scrollHeight) {
+      imgs[i].src = imgs[i].dataset.src;
+    }
+  }
+}
+```
+
+## 手写 Promise
+
+```js
+// 三种状态 不可逆
+const ENUM = {
+    PENDING: 'pending',
+    FULLFILLED: 'fullfilled',
+    REJECTED: 'rejected',
+}
+class myPromise{
+    constructor(exector){
+        this.status = ENUM.PENDING; //状态标识
+        this.value = undefined;     //成功返回值
+        this.reason = undefined;    //失败说明
+        this.onRejectedCb = [];     //成功回调数组
+        this.onFullFilledCb = [];   //失败回调数组
+
+        try{
+            exector(resolve, reject);
+        }catch(e){
+            this.reason = e;
+            this.status = ENUM.REJECTED;
+            reject(e);
+        }
+        const resolve = (value)=>{
+            if(this.status === ENUM.PENDING){
+                this.value = value;
+                this.status = ENUM.FULLFILLED;
+                //依次执行成功状态回调函数
+                this.onFullFilledCb.forEach((cb)=>{
+                    cb(this.value);
+                })
+            }
+        }
+        const reject = (reason)=>{
+            if(this.status === ENUM.PENDING){
+                this.reason = reason;
+                this.status = ENUM.REJECTED;
+                //依次执行失败状态回调函数
+                this.onRejectedCb.forEach((cb)=>{
+                    cb(this.reason);
+                })
+            }
+        }
+    }
+} 
+
+// Promise.then实现
+// then方法传入两个参数 onFulfilled, onRejected
+myPromise.prototype.then = function(onFulfilled, onRejected){
+    //入参异常处理
+    onFulfilled = typeof onFulfilled === "function" ? onFulfilled : (v) => v;
+    onRejected =
+        typeof onRejected === "function"
+        ? onRejected
+        : (reason) => {
+            throw new Error(reason instanceof Error ? reason.message : reason);
+            };
+
+    // 保存this
+    const self = this;
+    return new myPromise((resolve, reject) => {
+      if (self.status === ENUM.PENDING) {
+        self.onFullFilledCb.push(() => {
+          try {
+            setTimeout(() => {
+              const result = onFulfilled(self.value);
+              result instanceof myPromise
+                ? result.then(resolve, reject)
+                : resolve(result);
+            });
+          } catch (e) {
+            reject(e);
+          }
+        });
+        self.onRejectedCb.push(() => {
+          try {
+            setTimeout(() => {
+              const result = onRejected(self.reason);
+              result instanceof myPromise
+                ? result.then(resolve, reject)
+                : resolve(result);
+            });
+          } catch (e) {
+            reject(e);
+          }
+        });
+      } else if (self.status === ENUM.FULFILLED) {
+        try {
+          setTimeout(() => {
+            const result = onFulfilled(self.value);
+            result instanceof myPromise
+              ? result.then(resolve, reject)
+              : resolve(result);
+          });
+        } catch (e) {
+          reject(e);
+        }
+      } else if (self.status === ENUM.REJECTED) {
+        try {
+          setTimeout(() => {
+            const result = onRejected(self.reason);
+            result instanceof myPromise
+              ? result.then(resolve, reject)
+              : resolve(result);
+          });
+        } catch (e) {
+          reject(e);
+        }
+      }
+    });
+}
+myPromise.prototype.all = function(arrList){
+  //入参异常处理
+  if (!Array.isArray(arrList)) {
+      const type = typeof arrList;
+      return new TypeError(`TypeError: ${type} ${arrList} is not iterable`)
+  }
+
+  return new myPromise((resolve, reject) => {
+      const backArr = []
+      const count = 0
+      const processResultByKey = (value, index) => {
+          backArr[index] = value
+          if (++count === arrList.length) {
+              resolve(backArr)
+          }
+      }
+      for (let i = 0; i < arrList.length; i++) {
+          const item = arrList[i];
+          if (item && item.then === 'function') {
+              item.then((value) => {
+                  processResultByKey(value, i)
+              }, reject)
+          } else {
+              processResultByKey(item, i)
+          }
+      }
+  })
+}
+```
+
+https://codesandbox.io/s/javascript-shouxieti-rfo2c?file=/src/index.js
