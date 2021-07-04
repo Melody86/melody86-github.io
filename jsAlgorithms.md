@@ -67,3 +67,71 @@ function qsort(arr, left, right){
     return arr;
 }
 ```
+
+leetcode 401 [https://leetcode-cn.com/problems/binary-watch/]
+```js
+function readBinaryWatch(n){
+    let res = [];
+    dps(0, res, 0, n);
+    return res;
+}
+/*
+* time 二进制表示的时间, res结果数组, index判断当前是否亮灯索引, n剩余可亮灯数量 
+*/
+function dps(time, res, index, n){
+    const hr = time >> 6, min = time & 0b111111;
+    if(hr > 11 || min > 59){
+        return;
+    }
+    if(n === 0){
+        res.push(`${hr}:${min > 10 ? min: ('0'+min)}`);
+        return;
+    }
+    while(index <= 10 - n){
+        dps(time | (1 << index), res, ++index, n-1);
+    }
+}
+```
+DFS (Depth First Search) 深度优先搜索 <br>
+BFS (Breadth-First Search) 广度优先搜索
+DP(Dynamic Plan) 动态规划 <br>
+backtrack 回溯
+
+Math.floor // floor地板
+Math.ceil   // ceil天花板
+
+
+反转链表
+```js
+var reverseList = function(head) {
+    /* 
+        类比思考 反转数组思路 双端指针实现
+        while (l < r) swap(a, l++, r--)
+        数组位置的交换是这样 [a[i], a[j]] = [a[j], a[i]]
+        但是 单链表只能依次通过 next 访问 不能通过索引访问 
+        链表的交换需要扩展一个指针 即next
+        cur 当前项
+        prev 上一项
+        cur.next 当前指针指向
+        [ cur.next, prev, cur ] = [prev, cur, cur.next]
+        上面这段ES6语法表示
+        当前cur 的指针next 指向prev上一项 并且 交换迭代prev 和 next
+    */
+    let [p, c] = [null, head]
+
+    while (c) [c.next, p, c] = [p, c, c.next]
+
+    return p
+};
+```
+var reverseList = function(head) {
+    let pre = null;
+    let node = head;
+    while(node){
+        let temp = node.next;
+        node.next = pre;
+        pre = node;
+        node = temp;
+    }
+    return pre;
+};

@@ -68,6 +68,28 @@ if (vm.$options.el) {
 ```
 ![avatar](https://cn.vuejs.org/images/lifecycle.png)
 
+**总结**
+
+    组件生命周期执行顺序
+    beforeCreate、created、beforeMount、mounted、beforeUpdate、updated、activated、deactivated、beforeDestory、destoryed
+    
+    - vue先进行生命周期、事件、渲染函数等的初始化;
+    - 执行beforeCreate钩子，此时data和el均未初始化，值为undefined;
+    - 进行数据劫持、双向绑定;
+    - 执行created钩子，此时可以对data进行操作，可进行数据请求将返回的数据赋给data，此时Dom元素el还未初始化;
+    - 编译模板，根据是否有el和template进行编译;
+    - 执行beforeMount钩子, data和el均已经初始化，但此时el并没有渲染进数据，el的值为“虚拟”的元素节点;
+    - 渲染render函数，虚拟dom渲染成真实dom，并替换vm.$el;
+    - 执行mounted钩子，此时el已经渲染完成并挂载到实例上，可挂载的dom进行操作
+    - beforeUpdate和updated触发时，el中的数据都已经渲染完成，但只有updated钩子被调用时候，组件dom才被更新。
+    
+**父子组件传值&请求**
+
+在父组件调用接口传递数据给子组件时，接口响应显然是异步的。这会导致无论你在父组件哪个钩子发请求，在子组件哪个钩子接收数据。都是取不到的。当子组件的mounted都执行完之后，此时可能父组件的请求才返回数据。会导致，从父组件传递给子组件的数据是undefined。
+
+- 方案1: 通过v-if对子组件进行条件渲染, 数据的时候在去渲染子组件
+- 方案2: 子组件中 watch 监听
+
 ## 2. 双向绑定
 https://zhuanlan.zhihu.com/p/45081605
 
@@ -81,26 +103,35 @@ https://zhuanlan.zhihu.com/p/45081605
 
 在getter函数中进行依赖收集：getter方法相对于dep实例形成了闭包，巧妙的保存了dep实例。当某个观察者函数访问了某个数据，就通过dep实例进行收集。即Dep.target(Watcher)存在时，通过dep.depend()最终将当前watcher添加至subs观察者数组中。
 在setter函数中调用dep.notify()进行响应分发。
-
-
-
 ### 2.1 依赖收集: 
 
 观察者Watcher：视图、计算属性、侦听器; <br>
 观察目标Dep：依赖的数据;
 
-        Dep：数据的属性都会有Dep类实例，它内部有个subs队列，保存着依赖本数据的观察者(依赖数据的Watcher实例)，当数据变化时，调用dep.notify()通知观察者。
-        Watcher：扮演观察者的角色，进行观察者函数的包装处理。如render()函数，会被进行包装成一个Watcher实例。
-            - 模板渲染：this._watcher = new Watcher(this, render, this._update)
-        Observer：辅助的可观测类，数组/对象通过它的转化，可成为可观测数据。
+    Dep：数据的属性都会有Dep类实例，它内部有个subs队列，保存着依赖本数据的观察者(依赖数据的Watcher实例)，当数据变化时，调用dep.notify()通知观察者。
+    Watcher：扮演观察者的角色，进行观察者函数的包装处理。如render()函数，会被进行包装成一个Watcher实例。
+        - 模板渲染：this._watcher = new Watcher(this, render, this._update)
+    Observer：辅助的可观测类，数组/对象通过它的转化，可成为可观测数据。
 
-访问对象属性，其取值与赋值操作，都能被Object.defineProperty()成功拦截，但是Object.defineProperty()在处理数组时除了重新赋值一个数组外，其他操作(根据索引赋值、push、pop、shift等)都不能被setter检测到。Vue在数组的原型链上定义一系列操作方法，以此实现数组变更的检测，即定义一组原型方法`arr.__proto__`指向的那个原型对象上，如果浏览器不支持__proto__，那么就直接挂载在数组对象本身上。
+访问对象属性，其取值与赋值操作，都能被Object.defineProperty()成功拦截，但是Object.defineProperty()在处理数组时除了重新赋值一个数组外，其他操作(根据索引赋值、push、pop、shift等)都不能被setter检测到。可以通过vm.$set、Array.splice 响应数组元素和长度的变化
 
 至此，Vue 不能检测以下数组的变动：
 
     当你利用索引直接设置一个数组项时，例如：`vm.items[indexOfItem] = newValue`
     当你修改数组的长度时，例如：`vm.items.length = newLength`
+    push、pop、shift等
 
+vm.$set、Array.splice
+
+  ```js
+  // Vue.set
+  Vue.set(vm.items, indexOfItem, newValue)
+
+  // Array.prototype.splice
+  vm.items.splice(indexOfItem, 1, newValue)
+
+  vm.items.splice(newLength)
+  ```
 
 ```js
 /**
@@ -203,31 +234,29 @@ Vue3新特性:
         灵活的逻辑组合与复用
         Vue3模块可以和其他框架搭配使用
 5. typescript支持
-6. 
-Vue2 通过Object.defineProperty实现响应式, 不能兼容IE8以下浏览器;
+6. Vue2 通过Object.defineProperty实现响应式, 不能兼容IE8以下浏览器;
 
-**Object.prototype vs Proxy**
-Object.prototype 
+7. **Object.prototype vs Proxy**
 
-    检测不到对象属性的添加和删除
-    数组API方法无法监听到
-    需要对每个属性进行遍历监听，如果嵌套对象，需要深层监听，造成性能问题
+    Object.prototype 
+      - 检测不到对象属性的添加和删除<br>
+      - 数组API方法无法监听到<br>
+      - 需要对每个属性进行遍历监听，如果嵌套对象，需要深层监听，造成性能问题
 
-Proxy
-
-    监听是针对一个对象的，那么对这个对象的所有操作会进入监听操作，这就完全可以代理所有属性了
+    Proxy
+      - 监听是针对一个对象的，那么对这个对象的所有操作会进入监听操作，这就完全可以代理所有属性了
 
 ## 4. 组件化
-全局引入
+- 全局引入
 
-局部引入
+- 局部引入
 
 Vue.use()
 
-        Vue.use(VueRouter)
-        Vue.use(MintUI)
-        axios不需要用 Vue.use 就能直接使用，是因为axios没有install. 直接 `import axios from 'axios'`
-        如果当前已经注册过组件, 返回当前组件。否则调用组件里面的install方法。
+    Vue.use(VueRouter)
+    Vue.use(MintUI)
+    axios不需要用 Vue.use 就能直接使用，是因为axios没有install. 直接 `import axios from 'axios'`
+    如果当前已经注册过组件, 返回当前组件。否则调用组件里面的install方法。
 
 ```js
 export function initUse (Vue: GlobalAPI) {
@@ -290,3 +319,32 @@ updateChildren主要做了以下操作：
 
     设置新旧VNode的头尾指针
     新旧头尾指针进行比较，循环向中间靠拢，根据情况调用patchVnode进行patch重复流程、调用createElem创建一个新节点，从哈希表寻找 key一致的VNode 节点再分情况操作
+
+
+
+# QA 
+1. beforeCreate、created、beforeMounted、mounted在父子组件中的执行顺序
+   
+    **加载渲染过程**: 父组件先创建，然后子组件创建，子组件先挂载，然后父组件挂载<br>
+      父beforeCreate -> 父created -> 子beforeCreare -> 子created -> 子beforeMounted -> mounted.<br>
+    **更新过程**: 父beforeUpdate -> 子beforeUpdate -> 子updated -> 父updated.<br>
+    **销毁过程**: 父beforeDestory -> 子beforeDestory -> 子destoryed -> 父destoryed.
+
+2. vue能不能监听到数组push的变化？
+
+    由于JavaScript的限制，Vue不能检测数组和对象的变化。对于数组Vue不能响应，利用索引直接设置一个数组项, 以及修改数组长度,push、pop、shift等方法，但是可以通过vm.$set和Array.splice检测变化。
+
+3. 从浏览器返回html到渲染出页面，再到中间涉及到的优化点。DOM和css如何解析，如何渲染出元素？回流和重排怎么优化？
+    
+    屏幕刷新率60次/秒，每帧的合理耗时应该为: 1 秒/ 60 = 16.66 毫秒，但实际上浏览器还需要进行处理工作，因此每帧的执行耗时应该在10ms内完成，否则会出现抖动。
+
+    - 执行过程: JavaScript -> Style -> Layout -> Paint -> Compiste.  绘制Paint，就是填充像素的过程<br>
+    - 重排：修改"Layout"属性，也就是改变元素的几何属性(宽度、高度、左侧或顶部位置等)，那么浏览器将必须检查所有其他元素，然后“自动重排”页面。<br>
+    - 重绘：修改“paint only”属性(背景图片、文字颜色或阴影等)，即不会影响页面布局的属性，则浏览器会跳过布局，但仍将执行绘制。<br>
+    - 合成：如果更改一个既不用重新布局也不用绘制的属性，则浏览器将只进行 合成Compiste，例如动画或滚动.
+
+4. 操作DOM为什么是昂贵的？
+   
+    JS引擎和DOM渲染引擎共享主线程，两者互斥，JS调用DOM API进行渲染，渲染完之后再执行JS代码，上下文切换时也很耗性能;<br>
+    很多DOM API的读写都频繁涉及到Layout的重排，以确保返回值的准确，之后还会触发页面的重绘;<br>
+    因此 **降低引擎切换频率、减小 DOM 变更规模才是DOM性能优化的关键。**

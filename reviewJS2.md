@@ -123,6 +123,19 @@ Star.sex = '女';
 每一个javascript对象(除null外)创建的时候，都会与之关联另一个对象（父类对象），这个父类对象就是我们所说的原型，每一个对象都会从原型中“继承”属性。
 
 JS中，每个函数都有一个prototype属性，这个属性指向函数的原型对象。
+
+\__proto__ 是每个对象都有的属性, 大多数情况下，\__proto__可以理解为“构造器的原型”，但是通过 Object.create()创建的对象有可能不是， Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的__proto__。
+```js
+  __proto__ === constructor.prototype
+
+  let a1 = { a: 1 };
+  let a2 = Object.create(a1);
+  console.log("a2.__proto__:", a2.__proto__); //Object {a: 1}
+  console.log(a2.__proto__ === a1.constructor.prototype); //false
+  let a3 = Object.create(a1.__proto__);
+  console.log("a3.__proto__",a3.__proto__); 
+  console.log(a3.__proto__ === a1.constructor.prototype); //true
+```
 #### 7.6.3 原型链
 原型与原型之间通过__proto__层层串起来的直到Object.prototype.__proto__为null的链叫做原型链
 
@@ -353,7 +366,6 @@ function throttle(fn, delay){
 - 块级： div p ul li form h
 - 行内： em span a strong label
 - W3C模型：width = content； IE模型：width = padding+broder+content
-- 301 永久重定向，302 临时重定向，强缓存返回状态码200，协商缓存返回状态码304not modified (Last Modified & Etag)；
 - 比较大的JS、CSS文件会丢进磁盘，反之丢进内存；内存使用率比较高的时候，文件优先进入磁盘；
 
   BFC(block formatting context) 块级格式化上下文
@@ -367,6 +379,8 @@ function throttle(fn, delay){
 
 - 进程：CPU资源分配最小单位，可包含多个线程
 - 线程：CPU调度的最小单位，同进程下的线程共享程序的内存空间
+
+sort排序需要指定入参 nums.sort((a,b)=>{return a-b}), 直接在nums上进行排序
 
 ## JS 手写
 // 类数组转化为数组
@@ -558,3 +572,12 @@ myPromise.prototype.all = function(arrList){
 ```
 
 https://codesandbox.io/s/javascript-shouxieti-rfo2c?file=/src/index.js
+
+
+# QA
+1. class P{}; console.log(P.\__proto__)  
+    
+    每个对象都有\__proto__的属性，大多情况下指向构造函数的原型. <br>
+    每个函数都有一个prototype属性，这个属性指向函数的原型对象. <br>
+    class实际是function的语法糖, P.__proto__ 实际是Function.prototype. <br>
+    

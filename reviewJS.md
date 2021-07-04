@@ -234,3 +234,21 @@ JS引擎执行顺序
 数字签名的作用主要是：确保发送的报文没有被篡改
 非对称加密主要应用在密钥协商阶段，协商好密钥之后的通信就用对称加密了
 
+<!-- 
+@param total	必需。初始值, 或者计算结束后的返回值。
+@param currentValue	必需。当前元素
+@param currentIndex	可选。当前元素的索引
+@param arr	可选。当前元素所属的数组对象。
+@param initialValue	可选。传递给函数的初始值 
+-->
+
+原地修改nums数组
+
+Aarray.reduce(function(total, currentValue, currentIndex, arr), initialValue) :方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终计算为一个值。
+
+
+### ES6
+
+1.  如何自己实现let?
+
+    
