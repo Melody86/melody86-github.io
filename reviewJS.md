@@ -247,8 +247,4 @@ JS引擎执行顺序
 Aarray.reduce(function(total, currentValue, currentIndex, arr), initialValue) :方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终计算为一个值。
 
 
-### ES6
 
-1.  如何自己实现let?
-
-    

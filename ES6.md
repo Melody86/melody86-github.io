@@ -60,5 +60,93 @@ window.a // 1
 
 ## 6. Module
 
+## QA
 
 1.  如何自己实现let?
+  方式1：通过变量保存状态
+
+  方式2：try-catch
+  ```js
+  for(var i = 0 ; i < 10 ; i++){
+    try {
+        throw i;
+    } catch (e) {
+        setTimeout(()=>{
+            console.log(e)
+        })
+    }
+  } 
+  // try-catch伪造的块级作用域存在于catch里，其中e是一个有着类似于块级作用域变量的特性的独立变量
+  // 他不是i，所以能够保留下i的状态的变化
+  ```
+  方式3：自执行函数
+
+  方式4：map,forEach (通过map、 forEach保存状态)
+  ```js
+    for(var i = 0 ; i < 10 ; i++){
+      [i].map((i)=>{
+          setTimeout(()=>{
+              console.log(i);
+          })
+      });
+      [i].forEach((i) => {
+          setTimeout(()=>{
+              console.log(i);
+          })
+      });
+  ```
+
+**非循环中实现**
+```js
+  var name = 'World!';
+  (function () {
+      if (typeof name === 'undefined') {
+          var name = 'Jack';  //立即执行函数内变量提升
+          console.log('Goodbye ' + name);
+      }else{
+          console.log('Hello ' + name);
+      }
+  })()
+  /* 立即执行函数 var name = 'Jack'; 内变量提升，输出 Goodbye Jack，实际执行顺序如下: */
+
+  `use strict`
+  var name = 'World!';
+
+  (function () {
+
+    if (typeof name === 'undefined') {     
+        let name = 'Jack';     
+        console.log('Goodbye ' + name);
+
+    }else{
+        console.log('Hello ' + name); 
+    }
+
+  })()
+
+  /* let声明，没有变量提升, 输出 Hello World */
+```
+**简单的polyfill版本**
+
+[知乎 polyfill](https://zhuanlan.zhihu.com/p/71640183)
+```js
+  `use strict`
+  var name = 'World!';
+
+  (function () {
+
+    if (typeof name === 'undefined') {
+
+        (function(){
+            var name = 'Jack';
+            console.log('Goodbye ' + name);
+        })()
+
+    }else{
+
+        console.log('Hello ' + name);
+
+    }
+
+  })()
+```

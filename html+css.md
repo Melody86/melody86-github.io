@@ -204,6 +204,53 @@ fontEl.innerHTML = 'html{font-size:' + rem + 'px!important;}';
     /* IOS8下已经支持带小数的px值, media query对应devicePixelRatio有个查询值-webkit-min-device-pixel-ratio, css可以写成这样 */
    ```
 
+# BFC
+https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Block_formatting_context
+
+块级格式上下文(Block Formatting Context)，是块盒子的布局过程发生的区域，也是浮动元素与其他元素交互的区域。
+
+    下列方式会创建块格式化上下文：
+
+    根元素（<html>）
+    浮动元素（元素的 float 不是 none）
+    绝对定位元素（元素的 position 为 absolute 或 fixed）
+    行内块元素（元素的 display 为 inline-block）
+    overflow 计算值(Computed)不为 visible 的块元素
+    display 值为 flow-root 的元素       //无副作用BFC，创建一个上下文，里面将进行 flow layout
+    contain 值为 layout、content 或 paint 的元素
+    弹性元素（display 为 flex 或 inline-flex 元素的直接子元素）
+    ...
+
+**清除浮动**
+创建一个会包含这个浮动的 BFC，通常的做法是设置父元素 overflow: auto 或者设置其他的非默认的 overflow: visible 的值。可能会出现一些不需要的东西，比如滚动条或者一些剪切的阴影。也可以使用 display: flow-root (兼容性)
+
+**外边距合并**
+块的上外边距(margin-top)和下外边距(margin-bottom)有时合并(折叠)为单个边距，其大小为单个边距的最大值(或如果它们相等，则仅为其中一个).
+
+    有三种情况会形成外边距重叠:
+    1. 同一层相邻元素之间
+    2. 没有内容将父元素和子元素分开
+    3. 空的块级元素
+
+# Flex布局
+CSS 弹性盒子布局
+1. 属性
+   
+   flex、flex-grow、flex-basis、flex-shrink、flex-direction、order<br>
+   flex-wrap（换行）、flex-flow( flex-direction 和 flex-wrap 的简写)
+2. flex: 1
+```css
+    flex: 2             //  一个值, 无单位数字: flex-grow
+    flex: 10px          //  一个值, width/height: flex-basis
+    flex: 1 30px;       //  两个值: flex-grow | flex-basis
+    flex: 1 1 100px;    //  三个值: flex-grow | flex-shrink | flex-basis
+
+    flex-grow: 负值无效，指定了flex容器中剩余空间的多少应该分配给项目（flex增长系数）
+    flex-shrink: 负值无效, 指定了 flex 元素的收缩规则,
+    flex-basis: 若值为0，则必须加上单位，以免被视作伸缩性。省略时默认值为 0。(初始值为 auto). 指定了 flex 元素在主轴方向上的初始大小
+    
+```
+
 # css效果 
 https://github.com/Mmzer/think/issues/3#onepx
 1. 多行文本省略
@@ -222,4 +269,12 @@ https://github.com/Mmzer/think/issues/3#onepx
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 ```
+2. margin: auto
+   ```css
+    /* 上边 | 左边右边 | 下边 */
+    margin: 1em auto 2em;
+    /* auto指平分剩余空间   
+       只设置了左侧为auto,那么父元素剩余的空间都会分给左侧,就实现了float:right */
 
+   ```
+3. 
