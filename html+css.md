@@ -277,4 +277,71 @@ https://github.com/Mmzer/think/issues/3#onepx
        只设置了左侧为auto,那么父元素剩余的空间都会分给左侧,就实现了float:right */
 
    ```
-3. 
+
+
+# setTimeout、setInterval、requestAnimationFrame
+
+setInterval()和setTimeout()共享同一个ID池，并且clearInterval()和clearTimeout()在技术上是可互换使用的。
+
+向setInterval()传递一个方法或者函数的时候，需要注意this指针的问题。
+```js
+let myArray = ['zero', 'one', 'two'];
+
+myArray.myMethod = function (sProperty) {
+    alert(arguments.length > 0 ? this[sProperty] : this);
+};
+
+myArray.myMethod();     // 输出 "zero,one,two"
+myArray.myMethod(1);    // 输出 "one"
+setTimeout(myArray.myMethod, 1000);         // 1S后输出 "[object Window]"
+setTimeout(myArray.myMethod, 1500, "1");    // 1.5S后输出 "undefined"
+
+// 开始我们想通过.call绑定this指向myArray对象，从而使得myArray.myMethod中this指针能够指向myArray
+// 而setTimeout内部的this本应该指向window对象，this指向被修改后setTimeout执行报错
+setTimeout.call(myArray, myArray.myMethod, 2000);    // 报错 Uncaught TypeError: Illegal invocation
+setTimeout.call(myArray, myArray.myMethod, 2500, 2); // 报错 Uncaught TypeError: Illegal invocation
+
+// 方法1：改写window.setTimeout和setInterval，当入参为回调函数时重新绑定this指针
+
+var __nativeST__ = window.setTimeout, __nativeSI__ = window.setInterval;
+
+window.setTimeout = function (vCallback, nDelay /*, argumentToPass1, argumentToPass2, etc. */) {
+  var oThis = this, aArgs = Array.prototype.slice.call(arguments, 2);
+  return __nativeST__(vCallback instanceof Function ? function () {
+    vCallback.apply(oThis, aArgs);
+  } : vCallback, nDelay);
+};
+
+window.setInterval = function (vCallback, nDelay /*, argumentToPass1, argumentToPass2, etc. */) {
+  var oThis = this, aArgs = Array.prototype.slice.call(arguments, 2);
+  return __nativeSI__(vCallback instanceof Function ? function () {
+    vCallback.apply(oThis, aArgs);
+  } : vCallback, nDelay);
+};
+
+setTimeout(alert, 1500, 'Hello world!');                // 原来的调用方式功能正常
+setTimeout.call(myArray, myArray.myMethod, 2000);       // 2S后输出 "zero,one,two"
+setTimeout.call(myArray, myArray.myMethod, 2500, 2);    // 2.5S后输出 "two"
+
+// 方法2  Function.prototype.bind() 
+
+
+// 方法3 箭头函数 
+setTimeout((a)=>{
+    myArray.myMethod(a)
+}, 1000, 1)             // 1S后输出 "one"
+
+```
+[MiniDaemon：一个用于管理定时器的小框架](https://github.com/madmurphy/minidaemon.js)
+
+requestAnimationFrame
+
+告诉浏览器——你希望执行一个动画，并且要求浏览器在下次重绘之前调用指定的回调函数更新动画。回调函数执行次数通常是每秒60次，但在大多数遵循W3C建议的浏览器中，回调函数执行次数通常与浏览器屏幕刷新次数相匹配。为了提高性能和电池寿命，因此在大多数浏览器里，当requestAnimationFrame() 运行在后台标签页或者隐藏的`<iframe>` 里时，requestAnimationFrame() 会被暂停调用以提升性能和电池寿命。
+
+**ref:**
+
+[HTML - Web application APIs](https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model)
+
+[ECMAScript - Jobs and Job Queues](https://tc39.es/ecma262/#sec-jobs-and-job-queues)
+
+[从event loop规范探究javaScript异步及浏览器更新渲染时机 - 杨敬卓](https://github.com/aooy/blog/issues/5)
