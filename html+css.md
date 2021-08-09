@@ -338,6 +338,26 @@ requestAnimationFrame
 
 告诉浏览器——你希望执行一个动画，并且要求浏览器在下次重绘之前调用指定的回调函数更新动画。回调函数执行次数通常是每秒60次，但在大多数遵循W3C建议的浏览器中，回调函数执行次数通常与浏览器屏幕刷新次数相匹配。为了提高性能和电池寿命，因此在大多数浏览器里，当requestAnimationFrame() 运行在后台标签页或者隐藏的`<iframe>` 里时，requestAnimationFrame() 会被暂停调用以提升性能和电池寿命。
 
+## H5中 doctype的作用
+
+1. html5已经不是SGML语言的子集，因此不再需要文档类型定义。实际上，浏览器现在只是通过DOCTYPE 声明来决定使用何种模式(standard mode/quirk mode)来进行文档解析和渲染。
+
+    In HTML5, the only purpose of the DOCTYPE is to activate full standards mode. Older versions of the HTML standard gave additional meaning to the DOCTYPE, but no browser has ever used the DOCTYPE for anything other than switching between quirks mode and standards mode.
+
+2. defer属性对 module scripts 类型的脚本无效。该类脚本默认具有 defer 的效果
+
+    defer: indicate to a browser that the script is meant to be executed after the document has been parsed, but before firing DOMContentLoaded.
+
+3. 外部css 文件的加载会阻塞 dom解析 么？会阻塞渲染么？
+
+    既不会阻塞解析，也不会阻塞渲染(chrome观察得出)
+    但延迟加载的css会导致样式重新计算，从而导致 无样式闪烁 问题。
+
+    默认情况下，CSS 被视为阻塞渲染的资源，这意味着浏览器将不会渲染任何已处理的内容，直至 CSSOM 构建完毕。
+    css不阻塞 dom 解析，但是阻塞渲染。按照 google 的文档阐述是这样的，在 domcontentloaded 之前不会执行渲染，因为这个事件标志着 dom 和 cssom 的完成，然后才会开始构建 render tree。
+    
+    浏览器并不是css外部链接并不会阻塞浏览器的渲染，但是会阻塞文档的 loaded，以及出现样式闪烁。
+
 **ref:**
 
 [HTML - Web application APIs](https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model)

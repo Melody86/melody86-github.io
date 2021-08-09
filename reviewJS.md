@@ -247,4 +247,59 @@ JS引擎执行顺序
 Aarray.reduce(function(total, currentValue, currentIndex, arr), initialValue) :方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终计算为一个值。
 
 
+## 函数柯里化
+
+柯里化(Curring)，把接受多个参数的函数变成接受一个单一参数（最初函数的第一个参数）的函数，并且返回接受余下的参数并且返回结果的新函数.
+
+作用：参数复用、提前确认、延迟执行
+
+```js
+function curry(y){
+  return function(x){
+    return x-y
+  }
+}
+
+curry(1)(4)   // 3
+```
+
+柯里化通用封装方法
+```js
+// 两个入参的柯里化函数 初步封装
+var currying = function(fn){
+  let _this = this;
+  let argfn = Array.prototype.slice.call(arguments, 1);
+  return function(){
+    let args = argfn.concat(Array.prototype.slice.call(arguments));
+    return fn.apply(_this, args);
+  }
+}
+
+
+//支持多参数, 参数个数大于fn的入参个数时，递归柯里化
+function curry(fn, ...args1) {
+  return function(...args2) {
+    const args = args1.concat(args2)
+    if (args.length < fn.length) {
+      return curry(fn, ...args)
+    } else {
+      return fn(...args)
+    }
+  }
+}
+function add(a, b, c) {
+  return a + b + c
+}
+const curr = curry(add)
+```
+
+curry性能问题：
+
+    1. 存取arguments对象通常要比存取命名参数要慢一点
+    2. 一些老版本的浏览器在arguments.length的实现上是相当慢的
+    3. 使用fn.apply( … ) 和 fn.call( … )通常比直接调用fn( … ) 稍微慢点
+    4. 创建大量嵌套作用域和闭包函数会带来花销，无论是在内存还是速度上
+   
+    大部分应用中，主要的性能瓶颈是在操作DOM节点上，这js的性能损耗基本是可以忽略不计的，所以curry是可以直接放心的使用
+
 
