@@ -40,3 +40,8 @@ WebCore负责对HTML解析，CSS解析，渲染UI，调试信息等部分。
     调用window对象上的原生方法、回调方法
 
     通过WebViewClient.shouldOverrideUrlLoading() 这个API，原生可拦截Url，解析和执行本地方法
+
+
+## 离线包、补丁包
+
+
