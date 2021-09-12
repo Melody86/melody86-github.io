@@ -56,9 +56,33 @@ window.a // 1
 
 ## 4. Async
 
+```js
+// QA:
+// 实现delay函数逻辑，并打印出test返回值 1000
+async function test() {
+  console.log(1);
+  const time = await delay(1000);
+  console.log(2);
+  return time;
+}
+
+// 实现：
+async function delay(time){
+    return new Promise((resolve)=>{
+        setTimeout(()=>{
+            console.log(1000)
+            resolve()
+        }, 1000);
+
+    })
+}
+```
+
 ## 5. Class
 
 ## 6. Module
+
+[前端模块化（AMD、CommonJS、UMD）总结](https://zhuanlan.zhihu.com/p/75980415)
 
 ## QA
 
@@ -150,3 +174,10 @@ window.a // 1
 
   })()
 ```
+
+1. diff 算法为什么要从两边向中间比对，深度还是广度
+2. nodejs 适合什么场景
+3. compositionAPI和mixins的区别
+4. vue3做了哪些优化
+5. http2 二进制帧
+

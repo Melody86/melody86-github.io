@@ -118,6 +118,13 @@ TLS(建立在SSL 3.0协议规范之上，是SSL 3.0的后续版本):
 
 CDN系统能够实时地根据网络流量和各节点的连接、负载状况以及到用户的距离和响应时间等综合信息将用户的请求重新导向离用户最近的服务节点上。其目的是使用户可就近取得所需内容，解决 Internet网络拥挤的状况，提高用户访问网站的响应速度。
 
+CDN的combo技术能把多个资源文件合并引用，减少请求次数。比如淘宝的写法：
+
+```js
+<link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/??sm.min.css,sm-extend.min.css">
+
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/??sm.min.js,sm-extend.min.js' charset='utf-8'></script>
+```
 
 ### 9.4 性能优化
 

@@ -74,17 +74,18 @@ myPromise.prototype.all = function(promiseArray){
     let resultArray = new Array(promiseArray.length);
 
     for(var i=0; i<promise.length; i++){
-      promise[i].then(res=>{
+      Promise.resolve(promise[i].then(res=>{    //Promise.resolve 用于处理数组中参数为 非promise
         resultCount++;
         resultArray[i] = res;
         if(resultCount === promise.length){
           resolve(resultArray);
         }
-      }, error=>{reject(error)})
+      }, error=>{reject(error)}))
     }
   })
 }
 ```
+Promise.all 入参可以不是数组，当其中一个任务报错时，其他还会正常执行
 
 ### 7.6 原型链与继承
 #### 7.6.1 构造函数constructor
@@ -362,6 +363,27 @@ function throttle(fn, delay){
     }
   }
 }
+
+// 时间戳写法：第一次会执行，定时器写法：最后一次点击，还是会重新计时，综合如下
+function throttle(fn, delay){
+  let timer = null;
+  let startTime = 0;
+
+  return function(){
+    let context = this;
+    let args = arguments;
+    let currTime = new Date();
+    let remain = delay - ( curTime - startTime );
+    clearTimeout(timer);
+    if(remain <= 0){
+        fn.apply(context, arguments)
+        startTime = new Date()
+    }else{
+      timer =  setTimeout(fn, remain)
+    }
+  }
+}
+
 ```
 
 应用场景
@@ -577,6 +599,55 @@ myPromise.prototype.all = function(arrList){
       }
   })
 }
+```
+##数组常用方法
+
+pop、push、reverse、shift、sort、concat、join、toString、indexOf、map(value, key)
+
+indexOf() 方法可返回某个指定的字符串值在字符串中首次出现的位置（大小写敏感）。
+
+1. splice 
+  
+ 方法向/从数组中添加/删除项目，然后返回被删除的项目
+```js
+/*
+  index: 必需。整数，规定添加/删除项目的位置，使用负数可从数组结尾处规定位置。
+  howMany: 必需。要删除的项目数量。如果设置为 0，则不会删除项目。
+  item1:  ..., itemX	可选。向数组添加的新项目。
+*/ 
+splice(index, howMany, item1, ..., itemX) 
+```
+2. slice
+  
+从已有的数组中返回选定的元素
+```js
+/*
+  start: 规定从何处开始选取。如果是负数，那么它规定从数组尾部开始算起的位置, -1指最后一个元素
+  end: 可选。规定从何处结束选取。该参数是数组片断结束处的数组下标。如果没有指定该参数，那么切分的数组包含从 start 到数组结束的所有元素。
+*/ 
+slice(start, end) 
+```
+3. unshift 
+  
+向数组的开头添加一个或更多元素(改变原数组)，并返回新的数组
+```js
+/*
+  newelement1~X：向数组添加的第一到N个元素
+*/ 
+unshift(newelement1,newelement2,....,newelementX)
+```
+
+4. reduce
+```js
+/*
+  reduce() 方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终计算为一个值
+  total	必需。初始值, 或者计算结束后的返回值。
+  currentValue	必需。当前元素
+  currentIndex	可选。当前元素的索引
+  arr	可选。当前元素所属的数组对象。
+  initialValue	可选。传递给函数的初始值
+*/ 
+reduce(function(total, currentValue, currentIndex, arr), initialValue)
 ```
 
 https://codesandbox.io/s/javascript-shouxieti-rfo2c?file=/src/index.js

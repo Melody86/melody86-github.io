@@ -68,6 +68,55 @@ function qsort(arr, left, right){
 }
 ```
 
+**二分查找**
+```js
+// 存在：返回目标值所在数组索引
+function binarySearch(arr, target){
+    var left = 0, right = arr.length - 1;
+    let mid = 0;
+    while(left <= right){
+        mid = left + Math.floor( (right - left) / 2);
+        if(arr[mid] === target){
+            return mid;
+        }else if(arr[mid] < target){
+            left = mid + 1
+        }else{
+            right = mid -1
+        }
+    }
+    return false
+}
+
+//leetcode 35. 搜索插入位置
+function searchInsert(nums, arr){
+    var l = 0, r = nums.length -1, ans = r + 1;
+    while(l <= r){
+        let mid = (r - l >> 1) + l; //向下取整
+        if(target <= nums[mid]){
+            ans = mid
+            r = mid - 1
+        }else{
+            l = mid + 1
+        }
+    }
+    return ans
+}
+
+function searchInsert(nums, arr){
+    var l = 0, r = nums.length -1;
+    while(l <= r){
+        //向下取整，left + (right - left) / 2 就和(left + right) / 2 效果相同，但前者能避免值溢出
+        let mid = (r - l >> 1) + l; 
+        if(target < nums[mid]){
+            r = mid - 1
+        }else{
+            l = mid + 1
+        }
+    }
+    return l
+}
+```
+
 leetcode 401 [https://leetcode-cn.com/problems/binary-watch/]
 ```js
 function readBinaryWatch(n){
@@ -123,7 +172,7 @@ var reverseList = function(head) {
 
     return p
 };
-```
+
 var reverseList = function(head) {
     let pre = null;
     let node = head;
@@ -135,3 +184,71 @@ var reverseList = function(head) {
     }
     return pre;
 };
+
+/* 递归实现 */
+var reverseList = function(head){
+    if(head.next === null) return head;
+    var last = reverseList(head.next);
+    head.next.next = head;
+    head.next = null
+
+    return last
+}
+```
+
+```js
+//数组缓存
+function fibonacci(n){
+    var arr = new Array(n).fill(0)
+    arr[0] = arr[1] = 1
+    for(var i=2; i<n; i++){
+        arr[i] = arr[i-1] + arr[i-2]
+    }
+    return arr[n-1]
+}
+// 变量缓存
+function fibonacci(n){
+    var resn = pre1 = pre2 = 1
+    for(var i=2; i<n; i++){
+        [resn, pre1] = [pre1+pre2, pre2]
+        pre2 = resn
+    } 
+    return resn
+}
+//数组递归
+function fibonacci(n){
+    var arr = [1, 1]
+    if(arr[n-1] === void(0)){
+        return arr[n-1] = fb(n-1) + fb(n-2)
+    }
+    return arr[n-1]
+}
+```
+数字转千分位
+```js
+function parseNum(str){
+    return str.replace(/\d{1,3}(?=(\d{3})+$)/g, function(s){return s+','})
+}
+
+num.toLocaleString('en-US') 
+// 如(12345678.234566677).toLocaleString() 输出  "12,345,678.235"
+
+function parseNum(num){
+    //异常处理
+    var [left, right] = num.toString().split('.');
+    left = left.split('').reverse();
+    var i=0;
+    while(i < left.length && left[i+2]){
+        left[i+3] += ',';
+        i += 3;
+    }
+    right = right ? ('.'+right):'';
+    return left.reverse().join('')+ right;
+}
+
+```
+
+
+https://www.cnblogs.com/onepixel/p/7674659.html
+
+labuladong： https://mp.weixin.qq.com/mp/homepage?__biz=MzAxODQxMDM0Mw==&hid=1&sn=85a6bce3d32ba586bac86ccdbd4eb01e&scene=18#wechat_redirect

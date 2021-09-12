@@ -24,23 +24,31 @@
 1) JSONP原理
 利用 `<script>` 标签没有跨域限制的漏洞，网页可以得到从其他来源动态产生的 JSON 数据。JSONP请求一定需要对方的服务器做支持才可以。AJAX属于同源策略，JSONP属于非同源策略（跨域请求）。
 
-2) JSONP优缺点：JSONP优点是简单兼容性好，可用于解决主流浏览器的跨域数据访问的问题。缺点是仅支持get方法具有局限性,不安全可能会遭受XSS攻击。
+2) JSONP优缺点：JSONP优点是简单兼容性好，可用于解决主流浏览器的跨域数据访问的问题。缺点是**仅支持get方法具有局限性,不安全可能会遭受XSS攻击**。
  
 3) JSONP都是GET和异步请求的，不存在其他的请求方式和同步请求，且jQuery默认就会给JSONP的请求清除缓存。
 
 ### 2. 跨域资源共享CORS [Cross-origin resource sharing]
-服务端设置 Access-Control-Allow-Origin 就可以开启 CORS。 该属性表示哪些域名可以访问资源，如果设置通配符则表示所有网站都可以访问资源。
+浏览器一旦发现 AJAX 请求跨域，就会自动添加一些附加的头信息(增加Origin字段)，有时还会多出一次附加的请求(复杂请求)。服务端设置 Access-Control-Allow-Origin 就可以开启 CORS。 该属性表示哪些域名可以访问资源，如果设置通配符则表示所有网站都可以访问资源。
 
 1) 简单请求: 只要同时满足以下两大条件，就属于简单请求
    - 条件1：使用下列方法之一：GET、HEAD、POST
-   - 条件2：Content-Type 的值仅限于下列三者之一：
-        - text/plain
-        - multipart/form-data
-        - application/x-www-form-urlencoded
+   - 条件2：HTTP 的头信息不超出以下几种字段
+        - Accept
+        - Accept-Language
+        - Content-Language
+        - Last-Event-ID
+        - Content-Type 的值仅限于下列三者之一：<br>
+          text/plain<br>
+          multipart/form-data<br>
+          application/x-www-form-urlencoded<br>
+          
 请求中的任意 XMLHttpRequestUpload 对象均没有注册任何事件监听器； XMLHttpRequestUpload 对象可以使用 XMLHttpRequest.upload 属性访问。
 
-2) 复杂请求: 不符合以上条件的请求就肯定是复杂请求了。
+1) 复杂请求: 不符合以上条件的请求就肯定是复杂请求了。
 复杂请求的CORS请求，会在正式通信之前，增加一次HTTP查询请求，称为"预检"请求,该请求是 option 方法的，通过该请求来知道服务端是否允许跨域请求。
+
+这样划分的原因是，表单在历史上一直可以跨域发出请求。简单请求就是表单请求，浏览器沿袭了传统的处理方式，不把行为复杂化，否则开发者可能转而使用表单，规避 CORS 的限制。
 
 ```html
 // index.html
@@ -220,3 +228,5 @@ CSRF-Token、JWT、 Bearer token
   https://www.cnblogs.com/hyddd/archive/2009/04/09/1432744.html
 
   https://www.jianshu.com/p/c69f08ca056d
+
+  http://javascript.ruanyifeng.com/bom/cors.html#toc1
