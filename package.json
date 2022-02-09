@@ -1,0 +1,39 @@
+{
+  "name": "melody86-github.io",
+  "version": "1.0.0",
+  "description": "melody's manual",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "serve": "vitepress serve docs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Melody86/melody86-github.io.git"
+  },
+  "author": "melody",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Melody86/melody86-github.io/issues"
+  },
+  "homepage": "https://github.com/Melody86/melody86-github.io#readme",
+  "devDependencies": {
+    "globby": "^11.0.4",
+    "gray-matter": "^4.0.3",
+    "mz": "^2.7.0"
+  },
+  "dependencies": {
+    "@docsearch/css": "*",
+    "@docsearch/js": "*",
+    "@vuepress/plugin-back-to-top": "*",
+    "@vuepress/plugin-search": "^1.9.5",
+    "@vuepress/shared-utils": "^1.9.5",
+    "axios": "^0.21.4",
+    "swiper": "^7.4.1",
+    "vitepress": "^0.21.6",
+    "vuepress": "*",
+    "vuepress-plugin-player": "^1.1.6"
+  }
+}
