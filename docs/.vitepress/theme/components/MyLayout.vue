@@ -57,6 +57,12 @@ onMounted(()=>{
     aplayer.on('play', ()=>{
       playerCover.setAttribute('class', 'aplayer-pic aplayer-ani')
     })
+    if(ismobile){
+      aplayer.setMode('mini')
+    }else{
+      aplayer.setMode('normal')
+    }
+    
     window.aplayer = aplayer
   })
 })
@@ -172,6 +178,12 @@ const getImageClickLink = (item)=>{
   }
 }
 
+const clickedHeaderPullDown = function(){
+  const navheight = document.querySelector(".nav-bar").offsetHeight
+  const swiperheight = document.querySelector('.header-img-swiper').offsetHeight
+  window.scrollTo(0, swiperheight + navheight)
+}
+
 const { site, page, theme, frontmatter } = useData()
 const { Layout } = DefaultTheme
 
@@ -213,7 +225,7 @@ const musicList = computed(()=>{
           <span style="vertical-align: bottom">」</span> 
           
         </div>
-        <div v-if="!ismobile" class="header-pull-down"></div>
+        <div v-if="!ismobile" class="header-pull-down" @click="clickedHeaderPullDown()"></div>
       </div>
     </template>
     
@@ -235,6 +247,9 @@ const musicList = computed(()=>{
 </template>
 
 <style>
+.nav-bar{
+  z-index: 1000 !important;
+}
 .header-img-swiper{
   position: relative;
 }
@@ -269,8 +284,8 @@ const musicList = computed(()=>{
   border-right: 2px solid transparent;
   overflow: hidden;
   /* animation: name duration timing-function delay iteration-count direction fill-mode; */
-  animation: typing 7.5s infinite, blink-caret .75s step-end infinite;
-  -webkit-animation: typing 7.5s infinite, blink-caret .75s step-end infinite;
+  animation: typing 7.5s linear infinite, blink-caret .75s step-end infinite;
+  -webkit-animation: typing 7.5s linear infinite, blink-caret .75s step-end infinite;
 }
 /* 打印效果 */
 @keyframes typing {
@@ -295,6 +310,9 @@ const musicList = computed(()=>{
   z-index: 999;
   -webkit-animation: home-down 1.7s ease-in-out;
   animation: home-down 1.7s infinite
+}
+.header-pull-down:hover{
+  cursor: pointer
 }
 @-webkit-keyframes home-down {
     0% {

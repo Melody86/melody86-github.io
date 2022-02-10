@@ -149,7 +149,7 @@ Websocket是HTML5的一个持久化的协议，它实现了浏览器与服务器
 - 将请求 转发给服务器。
 - 拿到服务器 响应 数据。
 - 将 响应 转发给客户端。
-![avatar](../images/node-middleware.png)
+![avatar](/images/node-middleware.png)
 
 ### 6. nginx反向代理
 实现原理类似于Node中间件代理，需要你搭建一个中转nginx服务器，用于转发请求。
@@ -210,7 +210,7 @@ xss( Cross Site Scripting) 指恶意攻击者往web页面中插入恶意Script�
 
 ## 跨站请求伪造CSRF
 CSRF(Cross-site request forgery), 攻击者盗用了你的身份，以你的名义发送恶意请求。
-![avatar](../images/csrf.jpeg)
+![avatar](/images/csrf.jpeg)
 
 **防范**
 1. 客户端防范：对于数据库的修改请求，全部使用POST提交，禁止使用GET请求。

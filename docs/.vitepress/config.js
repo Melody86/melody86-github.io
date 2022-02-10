@@ -15,7 +15,7 @@ async function getConfig(){
   console.log('sidebarData22222: ', JSON.stringify(sidebarData))
   return {
 
-    // base: '/base/',     //部署不在根目录时，可配置路径前缀
+    base: '/',     //部署不在根目录时，可配置路径前缀
     lang: 'en-CN',
     title: "望月台·手抄",
     description: "取次花丛懒回顾，半缘修道半缘君",
@@ -56,15 +56,15 @@ async function getConfig(){
       ],
       [
         "link",
-        { rel: "stylesheet", href: "https://lib.baomitu.com/Swiper/8.0.3/swiper-bundle.min.css" },
+        { rel: "stylesheet", href: "/libjs/swiper-bundle.min.css" },
       ],
       [
         "link",
-        { rel: "stylesheet", href: "https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css" },
+        { rel: "stylesheet", href: "/libjs/APlayer.min.css" },
       ],
       ["script", { src: "https://unpkg.com/gitalk/dist/gitalk.min.js" }],
-      ["script", { src: "https://lib.baomitu.com/Swiper/8.0.3/swiper-bundle.min.js" }],
-      ["script", { src: "https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js" }],
+      ["script", { src: "/libjs/swiper-bundle.min.js" }],
+      ["script", { src: "/libjs/APlayer.min.js" }],
       
     ],
 
