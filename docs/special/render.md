@@ -202,7 +202,7 @@ Javascript引擎线程理所当然是负责解析Javascript脚本，运行代码
 XMLHttpRequest在连接后是通过浏览器新开一个线程请求， 将检测到状态变更时，如果设置有回调函数，异步线程就产生状态变更事件放到 JavaScript引擎的处理队列中等待处理。
 
 ### 7.2 JS事件循环
-![avatar](https://cdn.nlark.com/yuque/0/2019/png/202915/1554359044585-d8824196-cb82-498f-af7d-5e04a5489bd9.png)
+![avatar](/images/event-loop.png)
 
 JS引擎执行顺序
 - script脚本当做第一个宏任务开始顺序执行，将代码分为 “同步任务”、“异步任务”;

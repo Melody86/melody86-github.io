@@ -27,10 +27,11 @@ const ismobile = isIOSorAndroid()
 //   })
 // })
 onMounted(()=>{
-  
+  console.log('window load event:  0000000')
   throttle(getRandomWords, 12500, {leading: true, trailing: true})()
 
   window.addEventListener('load', ()=>{
+    console.log('window load event:  11111111')
     //轮播器
     window.swiper = new Swiper('.mySwiper', {
       // Optional parameters
@@ -130,6 +131,7 @@ const getRandomWords = function(){
           // relus.deleteRule("0")
           relus.deleteRule("1")
           relus.appendRule(`0% { width: 0; }`)
+          relus.appendRule(`90% { width: ${ randomWordsLen / 2 }em; }`) //停顿一段时间
           relus.appendRule(`100% { width: ${ randomWordsLen / 2 }em; }`)
         }
       }
@@ -233,7 +235,7 @@ const musicList = computed(()=>{
 
   <!-- https://github.com/SevenOutman/vue-aplayer/blob/develop/docs/README.md -->
   <!-- https://vueuse-motion-demo.netlify.app/installation.html -->
-  <div id="aplayer" class="header-aplayer"></div>
+  <div id="aplayer" class="header-aplayer" v-show="frontmatter.home"></div>
   <!-- <Aplayer 
     class="header-aplayer"
     listFolded
@@ -246,12 +248,17 @@ const musicList = computed(()=>{
   
 </template>
 
-<style>
+<style lang="less">
 .nav-bar{
   z-index: 1000 !important;
 }
 .header-img-swiper{
   position: relative;
+}
+.header-img-swiper .swiper-slide img{
+  width: 100%;
+  height: auto;
+  margin-top: auto;
 }
 .header-random{
   display: flex;
@@ -284,8 +291,8 @@ const musicList = computed(()=>{
   border-right: 2px solid transparent;
   overflow: hidden;
   /* animation: name duration timing-function delay iteration-count direction fill-mode; */
-  animation: typing 7.5s linear infinite, blink-caret .75s step-end infinite;
-  -webkit-animation: typing 7.5s linear infinite, blink-caret .75s step-end infinite;
+  animation: typing 7.5s ease-in-out infinite, blink-caret .75s step-end infinite;
+  -webkit-animation: typing 7.5s ease-in-out infinite, blink-caret .75s step-end infinite;
 }
 /* 打印效果 */
 @keyframes typing {
