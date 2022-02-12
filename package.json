@@ -32,8 +32,9 @@
     "@vuepress/plugin-search": "^1.9.5",
     "@vuepress/shared-utils": "^1.9.5",
     "axios": "^0.21.4",
-    "swiper": "^7.4.1",
+    "swiper": "^8.0.5",
     "vitepress": "^0.21.6",
+    "vue3-aplayer": "^1.7.3",
     "vuepress": "*",
     "vuepress-plugin-player": "^1.1.6"
   }

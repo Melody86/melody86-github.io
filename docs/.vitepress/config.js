@@ -90,18 +90,17 @@ async function getConfig(){
       },
       musicList: [
         {
-          name: 'At My Worst',
-          artist: 'Pink Sweat$ / Kehlani',
-          cover: '/audio/at-my-worst.jpeg',
-          url: '/audio/01 - At My Worst (feat. Kehlani).mp3'
-          
-        },{
-          name: 'Ghosts',
-          artist: 'New Empire',
-          cover: '/audio/Ghosts.png',
-          url: '/audio/New Empire - Ghosts.mp3'
-          
-        }
+            title: 'At My Worst',
+            artist: 'Pink Sweat$ / Kehlani',
+            pic: '/audio/at-my-worst.jpeg',
+            src: '/audio/01 - At My Worst (feat. Kehlani).mp3'
+            
+          },{
+            title: 'Ghosts',
+            artist: 'New Empire',
+            pic: '/audio/Ghosts.png',
+            src: '/audio/New Empire - Ghosts.mp3'
+          }
         
       ]
     },

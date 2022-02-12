@@ -1,9 +1,9 @@
 <script setup>
-import { computed, ref, onMounted,  } from 'vue'
+import { computed, ref, onMounted, onBeforeMount, createApp } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import { useRoute, useData } from 'vitepress'
 import axios from 'axios'
- 
+
 let randomWords = ref(null)
 
 // 判断是ios还是安卓
@@ -21,51 +21,43 @@ const isIOSorAndroid = function isIOSorAndroid() {
 
 const ismobile = isIOSorAndroid()
 
-// onCreated(()=>{
-//   import('vue3-aplayer').then(function (m) {
-//   app.component('Aplayer', m.default)
-//   })
-// })
+
+onBeforeMount(()=>{
+  import('vue3-aplayer').then((module)=>{
+    const player = createApp(module.default, {
+      listFolded: true,
+      float: true,
+      theme:"#FF3030",
+      repeat: "repeat-all",
+      list: theme.value.musicList,
+      music: theme.value.musicList[0],
+    }).mixin({
+      mounted(){
+        const player = document.getElementsByTagName('audio')[0]
+        if(player && !window.aplayerAnimation){
+          const playerCover = document.getElementsByClassName('aplayer-pic')[0]
+          player.addEventListener('pause', ()=>{
+            playerCover.setAttribute('class', 'aplayer-pic')
+          })
+          player.addEventListener('play', ()=>{
+            playerCover.setAttribute('class', 'aplayer-pic aplayer-ani')
+          })
+          window.aplayerAnimation = true
+          //绑定播放器旋转样式 .aplayer-ani
+          if(ismobile){
+            aplayer.setMode('mini')
+          }else{
+            aplayer.setMode('normal')
+          }
+        }
+      }
+    }).mount('#aplayer-body')
+  })
+})
+
 onMounted(()=>{
   console.log('window load event:  0000000')
   throttle(getRandomWords, 12500, {leading: true, trailing: true})()
-
-  window.addEventListener('load', ()=>{
-    console.log('window load event:  11111111')
-    //轮播器
-    window.swiper = new Swiper('.mySwiper', {
-      // Optional parameters
-      loop: true,
-      autoplay: true,
-      // Navigation arrows
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      }
-    })
-     
-    //音乐播放器  https://aplayer.js.org/#/zh-Hans/?id=cdn
-    const aplayer = new APlayer({
-      container: document.getElementById('aplayer'),
-      theme: '#FF3030',
-      audio: musicList.value
-    });
-    //绑定播放器旋转样式 .aplayer-ani
-    const playerCover = document.getElementsByClassName('aplayer-pic')[0]
-    aplayer.on('pause', ()=>{
-      playerCover.setAttribute('class', 'aplayer-pic')
-    })
-    aplayer.on('play', ()=>{
-      playerCover.setAttribute('class', 'aplayer-pic aplayer-ani')
-    })
-    if(ismobile){
-      aplayer.setMode('mini')
-    }else{
-      aplayer.setMode('normal')
-    }
-    
-    window.aplayer = aplayer
-  })
 })
 
 
@@ -169,17 +161,6 @@ const getRandomWords = function(){
       return cssRule
   }
 
-
-
-const getImageClickLink = (item)=>{
-  if(item && item !== '#'){
-    if(item.indexOf('http') < 0){
-      item = 'http://' + item 
-    }
-    return window.location.href = item
-  }
-}
-
 const clickedHeaderPullDown = function(){
   const navheight = document.querySelector(".nav-bar").offsetHeight
   const swiperheight = document.querySelector('.header-img-swiper').offsetHeight
@@ -207,20 +188,14 @@ const musicList = computed(()=>{
 </script>
 
 <template>
+
   <Layout>
     <template #home-hero>
       <div v-if="isHasHeadImg" class="header-img-swiper">
-        <div class="swiper mySwiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide" 
-              v-for="(item,index) in headPicList" :key="index ">
-              <img :src="item.src" @click="getImageClickLink(item.link)">
-            </div>
-          </div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
-        </div>
-       
+        <ClientOnly>
+          <my-swiper class="my-swiper" :headPicList="headPicList"></my-swiper>
+        </ClientOnly>
+      
         <div class="header-random" v-show="randomWords">
           <span style="vertical-align: top">「 </span>
           <span class="header-random-words" id="header-random-words">{{ randomWords }}</span>
@@ -235,20 +210,20 @@ const musicList = computed(()=>{
 
   <!-- https://github.com/SevenOutman/vue-aplayer/blob/develop/docs/README.md -->
   <!-- https://vueuse-motion-demo.netlify.app/installation.html -->
-  <div id="aplayer" class="header-aplayer" v-show="frontmatter.home"></div>
-  <!-- <Aplayer 
-    class="header-aplayer"
-    listFolded
-    float
-    theme="#FF3030"
-    repeat="repeat-all"
-    :list="theme.musicList"
-    :music="theme.musicList[0]"
-  /> -->
-  
+  <div 
+    v-show="frontmatter.home"
+    id="aplayer-body" 
+    class="header-aplayer">
+  </div>
+
 </template>
 
 <style lang="less">
+.my-swiper{
+  --swiper-theme-color: #fff;/* 设置Swiper风格 */
+  --swiper-navigation-color: #fff;/* 单独设置按钮颜色 */
+  --swiper-navigation-size: 35px;/* 设置按钮大小 默认是44px */
+}
 .nav-bar{
   z-index: 1000 !important;
 }
@@ -348,17 +323,25 @@ const musicList = computed(()=>{
         transform: translate(-50%, 0)
     }
 }
-#aplayer{
-  max-width: 375px;
+.header-aplayer{
+  max-width: 300px;
   bottom: 100px;
   left: 20px;
-  position: fixed;
+  position: fixed !important;
   z-index: 999;
-  -moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
-  -webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
-  box-shadow:2px 2px 10px #909090;/*opera或ie9*/
+  .aplayer-info{
+    margin-left: 10px !important;
+    .aplayer-music{
+      .aplayer-title{
+        display: inline-block;
+        margin-right: 4px;
+        font-weight: 500;
+      }
+    }
+  }
+  
 }
-#aplayer .aplayer-pic.aplayer-ani{
+.header-aplayer .aplayer-pic.aplayer-ani{
   border-radius: 50%;
   animation: player-rotation 4s linear infinite;
   -moz-animation: player-rotation 4s linear infinite;
