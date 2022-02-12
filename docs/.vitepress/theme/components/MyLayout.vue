@@ -43,12 +43,6 @@ onBeforeMount(()=>{
             playerCover.setAttribute('class', 'aplayer-pic aplayer-ani')
           })
           window.aplayerAnimation = true
-          //绑定播放器旋转样式 .aplayer-ani
-          if(ismobile){
-            aplayer.setMode('mini')
-          }else{
-            aplayer.setMode('normal')
-          }
         }
       }
     }).mount('#aplayer-body')
