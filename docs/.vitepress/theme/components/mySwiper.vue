@@ -1,12 +1,17 @@
 <template>
    <swiper 
     class="swiper-content"
+    @touchStart="navigationStatus=true"
+    @touchEnd="swiperTouchLeave"
+    @mouseover="navigationStatus=true"
+    @mouseleave="swiperTouchLeave"
     :loop="true"
     :autoplay="{
-      delay: 2500,
+      delay: 4500,
       disableOnInteraction: false,
     }"
-    :navigation="true"
+    :speed="1500"
+    :navigation="navigationStatus"
     :pagination="{ clickable: true }"
     :slides-per-view="1">
 
@@ -18,7 +23,7 @@
 </template>
 
 <script>
-  import { defineComponent, computed } from "vue";
+  import { defineComponent, computed, onMounted, reactive, toRefs } from "vue";
   import 'swiper/css'
   import "swiper/css/pagination"
   import "swiper/css/navigation"
@@ -34,7 +39,11 @@
     props: {
       headPicList: Array
     },
+    
     setup(){
+      const data = reactive({
+        navigationStatus: false,
+      })
       const getImageClickLink = (item)=>{
         if(item && item !== '#'){
           if(item.indexOf('http') < 0){
@@ -43,8 +52,19 @@
           return window.location.href = item
         }
       }
+      const swiperTouchLeave = function(){
+        setTimeout(() => {
+          data.navigationStatus = false
+        }, 2000);
+      }
+      onMounted(()=>{
+        console.log('0000')
+      })
       return {
+        ...toRefs(data),
         getImageClickLink,
+        swiperTouchLeave,
+        modules: [Pagination, Navigation, Autoplay],
       }
     }
   }

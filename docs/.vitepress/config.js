@@ -54,17 +54,7 @@ async function getConfig(){
         "link",
         { rel: "stylesheet", href: "https://unpkg.com/gitalk/dist/gitalk.css" },
       ],
-      [
-        "link",
-        { rel: "stylesheet", href: "/libjs/swiper-bundle.min.css" },
-      ],
-      [
-        "link",
-        { rel: "stylesheet", href: "/libjs/APlayer.min.css" },
-      ],
       ["script", { src: "https://unpkg.com/gitalk/dist/gitalk.min.js" }],
-      ["script", { src: "/libjs/swiper-bundle.min.js" }],
-      ["script", { src: "/libjs/APlayer.min.js" }],
       
     ],
 

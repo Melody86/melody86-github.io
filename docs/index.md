@@ -9,12 +9,45 @@ sidebar: false
 # actionLink: /zh/guide/
 
 headPicList:
-- src: /images/sunset.jpg
+- src: /images/home/sunset.jpg
   link: #
-- src: /images/pafc.jpg
+- src: /images/home/sunset2.jpeg
   link: #
-- src: /images/csrf.jpeg
+- src: /images/home/flower.jpeg
+  link: #
+- src: /images/home/pafc.jpg
   link: www.baidu.com
+- src: /images/home/DSC01332.jpg
+  link: #
+- src: /images/home/DSC00984.jpg
+  link: #
+- src: /images/home/DSC00988.jpg
+  link: #
+- src: /images/home/DSC01048.jpg
+  link: #
+- src: /images/home/DSC01074.jpg
+  link: #
+- src: /images/home/DSC01096.jpg
+  link: #
+- src: /images/home/DSC01109.jpg
+  link: #  
+- src: /images/home/DSC01252.jpg
+  link: #  
+- src: /images/home/DSC01284.jpg
+  link: #  
+- src: /images/home/DSC01277.jpg
+  link: #  
+- src: /images/home/DSC01279.jpg
+  link: #  
+
+# DSC01503.jpg
+# DSC01684.jpg
+# DSC01717.jpg
+# DSC01912.jpg
+# DSC01927.jpg
+# DSC01932.jpg
+# DSC01987.jpg
+# DSC02006-2.jpg
   
 footer: MIT Licensed | Copyright © 2022-present Melody Ryan
 ---

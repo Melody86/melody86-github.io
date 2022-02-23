@@ -2,25 +2,10 @@
 import { computed, ref, onMounted, onBeforeMount, createApp } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import { useRoute, useData } from 'vitepress'
-import axios from 'axios'
-
-let randomWords = ref(null)
-
-// 判断是ios还是安卓
-const isIOSorAndroid = function isIOSorAndroid() {
-  const inBrowser = typeof window !== 'undefined';
-  const UA = inBrowser && window.navigator.userAgent.toLowerCase();
-  const isAndroid = /(android);?[\s/]+([\d.]+)?/.test(UA);
-  const isIpad = /(ipad).*os\s([\d_]+)/.test(UA);
-  const isIpod = /(ipod)(.*os\s([\d_]+))?/.test(UA);
-  const isIphone = !isIpad && /(iphone\sos)\s([\d_]+)/.test(UA);
-  if (isAndroid) return 'android';
-  if (isIpad || isIpod || isIphone) return 'ios';
-  return false;
-};
+import { isIOSorAndroid, } from '../../utils/index.js'
+import randomWords from './randomWords.vue'
 
 const ismobile = isIOSorAndroid()
-
 
 onBeforeMount(()=>{
   import('vue3-aplayer').then((module)=>{
@@ -50,115 +35,16 @@ onBeforeMount(()=>{
 })
 
 onMounted(()=>{
-  console.log('window load event:  0000000')
-  throttle(getRandomWords, 12500, {leading: true, trailing: true})()
+ 
 })
 
-
-function throttle(fn, wait, options = {}) {
-    let timer;
-    let previous = 0;
-    let throttled = function () {
-        let now = +new Date();
-        // remaining 不触发下一次函数的剩余时间
-        if (!previous && options.leading === false) previous = now;
-        let remaining = wait - (now - previous);
-        if (remaining < 0) {
-            if (timer) {
-                clearTimeout(timer);
-                timer = null;
-            }
-            previous = now;
-            fn.apply(this, arguments)
-        } else if (!timer && options.trailing !== false) {
-            timer = setTimeout(() => {
-                previous = options.leading === false ? 0 : new Date().getTime();
-                timer = null;
-                fn.apply(this, arguments);
-            }, remaining);
-        }
-    }
-    return throttled;
-}
-
-// Get string width
-function getStringWidth(val) {
-  let len = 0;
-  for (let i = 0; i < val.length; i++) {
-    let length = val.charCodeAt(i);
-    if( length >= 0 && length <= 128 ) {
-      len += 1;
-    } else {
-      len += 2;
-    }
-  }
-  return len;
-}
-
-const getRandomWords = function(){
-  const len = ismobile ? 16 : 45
-  axios.get(`https://international.v1.hitokoto.cn/?c=b&max_length=${len}`).then((res)=>{
-    if(res){
-      randomWords.value = res.data.hitokoto
-      const randElem = document.getElementById('header-random-words')
-      const randomWordsLen = getStringWidth(res.data.hitokoto)
-      console.log('randElem.style: ', randElem)
-      if(randElem){
-        randElem.style.width = randomWordsLen / 2 + 'em'
-        const steps = `steps(${( randomWordsLen )*2 }, end)`
-        randElem.style.animationTimingFunction = steps
-        randElem.style.animationDuration = 200 * randomWordsLen+"ms"
-        randElem.style.webkitAnimationTimingFunction = steps
-
-        // document.styleSheets[0].cssdeleteRule(0)  //删除之前动画样式
-        let relus = getCSSRule('typing', CSSRule.KEYFRAMES_RULE)  //获取样式索引
-        if(relus){
-          // console.log('relus: ', relus)
-          // relus.deleteRule("0")
-          relus.deleteRule("1")
-          relus.appendRule(`0% { width: 0; }`)
-          relus.appendRule(`90% { width: ${ randomWordsLen / 2 }em; }`) //停顿一段时间
-          relus.appendRule(`100% { width: ${ randomWordsLen / 2 }em; }`)
-        }
-      }
-    }
-  }).catch((e)=>{
-    new Error('getRandomWords error: ', e)
-  })
-}
-
-  /*
-  *   查找 document 样式表中 特定样式relus, 返回对应索引
-  *   @param name: 需要查找的样式名称
-  *   @param type: 需要查找的样式的类型，增强校验
-  *   @return 样式对应索引
-  *   site: https://docs.microsoft.com/zh-cn/archive/blogs/msdn_answers/part-i-using-javascript-to-set-keyframes-in-css-animations-windows-store-apps-ie
-  */ 
-   function getCSSRule(name, type) {
-      let rule
-      let ss = document.styleSheets
-      let cssRule
-
-      for (var i = 0; i < ss.length; i++) {
-        try{
-          for (var x = 0; x < ss[i].cssRules.length; x++) {
-            rule = ss[i].cssRules[x]
-            if (rule.name && rule.name === name && rule.type === type) {
-                return rule
-            }
-          }
-        }catch(e){
-          console.log('1111111111111')
-          continue
-        }
-      }
-      return cssRule
-  }
-
 const clickedHeaderPullDown = function(){
-  const navheight = document.querySelector(".nav-bar").offsetHeight
-  const swiperheight = document.querySelector('.header-img-swiper').offsetHeight
-  window.scrollTo(0, swiperheight + navheight)
+  const nav = document.querySelector(".nav-bar")
+  if(nav){
+    const navheight = nav.offsetHeight
+    const swiperheight = document.querySelector('.header-img-swiper').offsetHeight
+    window.scrollTo(0, swiperheight + navheight)
+  }
 }
 
 const { site, page, theme, frontmatter } = useData()
@@ -182,20 +68,15 @@ const musicList = computed(()=>{
 </script>
 
 <template>
-
-  <Layout>
-    <template #home-hero>
+  <Layout >
+    <template #home-hero id="homeHero">
       <div v-if="isHasHeadImg" class="header-img-swiper">
         <ClientOnly>
           <my-swiper class="my-swiper" :headPicList="headPicList"></my-swiper>
         </ClientOnly>
-      
-        <div class="header-random" v-show="randomWords">
-          <span style="vertical-align: top">「 </span>
-          <span class="header-random-words" id="header-random-words">{{ randomWords }}</span>
-          <span style="vertical-align: bottom">」</span> 
-          
-        </div>
+
+        <randomWords class="header-random"/>
+
         <div v-if="!ismobile" class="header-pull-down" @click="clickedHeaderPullDown()"></div>
       </div>
     </template>
@@ -213,6 +94,21 @@ const musicList = computed(()=>{
 </template>
 
 <style lang="less">
+.page{
+  .container{
+    max-width: 80% !important;
+  }
+}
+@media screen and (max-width: 420px) {
+  .page{
+    .container{
+      max-width: 100% !important;
+    }
+    div[class*='language-']{
+      margin: 0 !important;
+    }
+  }
+}
 .my-swiper{
   --swiper-theme-color: #fff;/* 设置Swiper风格 */
   --swiper-navigation-color: #fff;/* 单独设置按钮颜色 */
@@ -226,7 +122,7 @@ const musicList = computed(()=>{
 }
 .header-img-swiper .swiper-slide img{
   width: 100%;
-  height: auto;
+  height: 56.25vw;  //100vw*9/16
   margin-top: auto;
 }
 .header-random{
@@ -250,29 +146,6 @@ const musicList = computed(()=>{
     z-index: 999;
     color: #fff;
   }
-}
-
-.header-random .header-random-words{
-  display: inline-block;
-  width: 18.5em;
-  white-space: nowrap;
-  word-break: break-all;
-  border-right: 2px solid transparent;
-  overflow: hidden;
-  /* animation: name duration timing-function delay iteration-count direction fill-mode; */
-  animation: typing 7.5s ease-in-out infinite, blink-caret .75s step-end infinite;
-  -webkit-animation: typing 7.5s ease-in-out infinite, blink-caret .75s step-end infinite;
-}
-/* 打印效果 */
-@keyframes typing {
-  from { width: 0; }
-  to { width: 18.5em; }
-}
-
-/* 光标闪啊闪 */
-@keyframes blink-caret {
-  from, to { box-shadow: 1px 0 0 0 transparent; }
-  50% { box-shadow: 1px 0 0 0; }
 }
 
 .header-pull-down{

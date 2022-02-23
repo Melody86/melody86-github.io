@@ -26,24 +26,27 @@
 </template>
 
 <script>
-  import { defineComponent, computed, watch, ref } from "vue";
-  import { withBase, initTags } from "../../theme-default/utils";
+  import { defineComponent, computed, watch, ref , onMounted} from "vue";
+  // import { withBase, initTags } from "../../theme-default/utils";
   import {
-    usePageData,
-    useSiteData,
+    // usePageData,
+    // useSiteData,
     useRoute,
-    useSiteDataByRoute,
+    // useSiteDataByRoute,
   } from "vitepress";
 
   export default defineComponent({
     setup() {
-      const siteData = useSiteData();
+      // const siteData = useSiteData();
       const route = useRoute();
       const data = ['生活', '娱乐']//computed(() => initTags(siteData.value.themeConfig.pages));
       let selectTag = ref("");
       const toggleTag = (tag) => {
         selectTag.value = tag;
       };
+      onMounted(()=>{
+        console.log('33333')
+      })
 
       return {
         data,
