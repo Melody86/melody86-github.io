@@ -1,6 +1,6 @@
 ---
 date: 2021-05-17
-title: 简单算法
+title: 算法
 tags:
   - algorithme
   - js

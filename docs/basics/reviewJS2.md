@@ -399,24 +399,6 @@ function throttle(fn, delay){
 - 谷歌搜索框，搜索联想功能
 - 高频点击提交，表单重复提交。
 
-### 8.3 其他
-- 块级： div p ul li form h
-- 行内： em span a strong label
-- W3C模型：width = content； IE模型：width = padding+broder+content
-- 比较大的JS、CSS文件会丢进磁盘，反之丢进内存；内存使用率比较高的时候，文件优先进入磁盘；
-
-  BFC(block formatting context) 块级格式化上下文
-  内部的box会在垂直方向上，一个接一个的放置
-  Box垂直方向的距离由margin决定，属于同一个BFC的两个相邻box的margin会发生重叠
-  BFC区域不会与float box重叠
-  BFC就是页面上一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。
-
-  利用BFC避免margin重叠，外层用div包裹
-  清除浮动：overflow: hidden
-
-- 进程：CPU资源分配最小单位，可包含多个线程
-- 线程：CPU调度的最小单位，同进程下的线程共享程序的内存空间
-
 sort排序需要指定入参 nums.sort((a,b)=>{return a-b}), 直接在nums上进行排序
 
 ## JS 手写

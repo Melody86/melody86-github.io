@@ -1,16 +1,15 @@
 ---
 date: 2021-05-17
-title: html+css
+title: 移动端
 tags:
-  - HTML
-  - CSS
-describe: html、css
+  - mobile
+describe: 移动端
 ---
 
 参考阅读 https://github.com/amfe/article/issues/17
 
 # 像素
-- 物理像素/设备像素 (<font color="green">dp</font>: device pixels[android], <font color="green">pt</font>: device pixels[IOS])
+- 物理像素/设备像素 (<**dp**: device pixels[android], **pt**: device pixels[IOS])
  
     屏幕出厂时设置好的像素点, 和屏幕尺寸大小有关，单位pt。
 
@@ -213,164 +212,4 @@ fontEl.innerHTML = 'html{font-size:' + rem + 'px!important;}';
     /* IOS8下已经支持带小数的px值, media query对应devicePixelRatio有个查询值-webkit-min-device-pixel-ratio, css可以写成这样 */
    ```
 
-# BFC
-https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Block_formatting_context
 
-块级格式上下文(Block Formatting Context)，是块盒子的布局过程发生的区域，也是浮动元素与其他元素交互的区域。
-
-    下列方式会创建块格式化上下文：
-
-    根元素（<html>）
-    浮动元素（元素的 float 不是 none）
-    绝对定位元素（元素的 position 为 absolute 或 fixed）
-    行内块元素（元素的 display 为 inline-block）
-    overflow 计算值(Computed)不为 visible 的块元素
-    display 值为 flow-root 的元素       //无副作用BFC，创建一个上下文，里面将进行 flow layout
-    contain 值为 layout、content 或 paint 的元素
-    弹性元素（display 为 flex 或 inline-flex 元素的直接子元素）
-    ...
-
-**清除浮动**
-创建一个会包含这个浮动的 BFC，通常的做法是设置父元素 overflow: auto 或者设置其他的非默认的 overflow: visible 的值。可能会出现一些不需要的东西，比如滚动条或者一些剪切的阴影。也可以使用 display: flow-root (兼容性)
-
-**外边距合并**
-块的上外边距(margin-top)和下外边距(margin-bottom)有时合并(折叠)为单个边距，其大小为单个边距的最大值(或如果它们相等，则仅为其中一个).
-
-    有三种情况会形成外边距重叠:
-    1. 同一层相邻元素之间
-    2. 没有内容将父元素和子元素分开
-    3. 空的块级元素
-
-# Flex布局
-CSS 弹性盒子布局
-1. 属性
-   
-   flex、flex-grow、flex-basis、flex-shrink、flex-direction、order<br>
-   flex-wrap（换行）、flex-flow( flex-direction 和 flex-wrap 的简写)
-2. flex: 1
-```css
-    flex: 2             //  一个值, 无单位数字: flex-grow
-    flex: 10px          //  一个值, width/height: flex-basis
-    flex: 1 30px;       //  两个值: flex-grow | flex-basis
-    flex: 1 1 100px;    //  三个值: flex-grow | flex-shrink | flex-basis
-
-    flex-grow: 负值无效，指定了flex容器中剩余空间的多少应该分配给项目（flex增长系数）
-    flex-shrink: 负值无效, 指定了 flex 元素的收缩规则,
-    flex-basis: 若值为0，则必须加上单位，以免被视作伸缩性。省略时默认值为 0。(初始值为 auto). 指定了 flex 元素在主轴方向上的初始大小
-    
-```
-
-# css效果 
-https://github.com/Mmzer/think/issues/3#onepx
-1. 多行文本省略
-
-```css
-    /* 单行 */
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    /* 部分浏览器还需要加上width属性 */
-
-    /* 多行 */
-    overflow : hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-```
-2. margin: auto
-   ```css
-    /* 上边 | 左边右边 | 下边 */
-    margin: 1em auto 2em;
-    /* auto指平分剩余空间   
-       只设置了左侧为auto,那么父元素剩余的空间都会分给左侧,就实现了float:right */
-
-   ```
-
-
-# setTimeout、setInterval、requestAnimationFrame
-
-setInterval()和setTimeout()共享同一个ID池，并且clearInterval()和clearTimeout()在技术上是可互换使用的。
-
-向setInterval()传递一个方法或者函数的时候，需要注意this指针的问题。
-```js
-let myArray = ['zero', 'one', 'two'];
-
-myArray.myMethod = function (sProperty) {
-    alert(arguments.length > 0 ? this[sProperty] : this);
-};
-
-myArray.myMethod();     // 输出 "zero,one,two"
-myArray.myMethod(1);    // 输出 "one"
-setTimeout(myArray.myMethod, 1000);         // 1S后输出 "[object Window]"
-setTimeout(myArray.myMethod, 1500, "1");    // 1.5S后输出 "undefined"
-
-// 开始我们想通过.call绑定this指向myArray对象，从而使得myArray.myMethod中this指针能够指向myArray
-// 而setTimeout内部的this本应该指向window对象，this指向被修改后setTimeout执行报错
-setTimeout.call(myArray, myArray.myMethod, 2000);    // 报错 Uncaught TypeError: Illegal invocation
-setTimeout.call(myArray, myArray.myMethod, 2500, 2); // 报错 Uncaught TypeError: Illegal invocation
-
-// 方法1：改写window.setTimeout和setInterval，当入参为回调函数时重新绑定this指针
-
-var __nativeST__ = window.setTimeout, __nativeSI__ = window.setInterval;
-
-window.setTimeout = function (vCallback, nDelay /*, argumentToPass1, argumentToPass2, etc. */) {
-  var oThis = this, aArgs = Array.prototype.slice.call(arguments, 2);
-  return __nativeST__(vCallback instanceof Function ? function () {
-    vCallback.apply(oThis, aArgs);
-  } : vCallback, nDelay);
-};
-
-window.setInterval = function (vCallback, nDelay /*, argumentToPass1, argumentToPass2, etc. */) {
-  var oThis = this, aArgs = Array.prototype.slice.call(arguments, 2);
-  return __nativeSI__(vCallback instanceof Function ? function () {
-    vCallback.apply(oThis, aArgs);
-  } : vCallback, nDelay);
-};
-
-setTimeout(alert, 1500, 'Hello world!');                // 原来的调用方式功能正常
-setTimeout.call(myArray, myArray.myMethod, 2000);       // 2S后输出 "zero,one,two"
-setTimeout.call(myArray, myArray.myMethod, 2500, 2);    // 2.5S后输出 "two"
-
-// 方法2  Function.prototype.bind() 
-
-
-// 方法3 箭头函数 
-setTimeout((a)=>{
-    myArray.myMethod(a)
-}, 1000, 1)             // 1S后输出 "one"
-
-```
-[MiniDaemon：一个用于管理定时器的小框架](https://github.com/madmurphy/minidaemon.js)
-
-requestAnimationFrame
-
-告诉浏览器——你希望执行一个动画，并且要求浏览器在下次重绘之前调用指定的回调函数更新动画。回调函数执行次数通常是每秒60次，但在大多数遵循W3C建议的浏览器中，回调函数执行次数通常与浏览器屏幕刷新次数相匹配。为了提高性能和电池寿命，因此在大多数浏览器里，当requestAnimationFrame() 运行在后台标签页或者隐藏的`<iframe>` 里时，requestAnimationFrame() 会被暂停调用以提升性能和电池寿命。
-
-## H5中 doctype的作用
-
-1. html5已经不是SGML语言的子集，因此不再需要文档类型定义。实际上，浏览器现在只是通过DOCTYPE 声明来决定使用何种模式(standard mode/quirk mode)来进行文档解析和渲染。
-
-    In HTML5, the only purpose of the DOCTYPE is to activate full standards mode. Older versions of the HTML standard gave additional meaning to the DOCTYPE, but no browser has ever used the DOCTYPE for anything other than switching between quirks mode and standards mode.
-
-2. defer属性对 module scripts 类型的脚本无效。该类脚本默认具有 defer 的效果
-
-    defer: indicate to a browser that the script is meant to be executed after the document has been parsed, but before firing DOMContentLoaded.
-
-3. 外部css 文件的加载会阻塞 dom解析 么？会阻塞渲染么？
-
-    既不会阻塞解析，也不会阻塞渲染(chrome观察得出)
-    但延迟加载的css会导致样式重新计算，从而导致 无样式闪烁 问题。
-
-    默认情况下，CSS 被视为阻塞渲染的资源，这意味着浏览器将不会渲染任何已处理的内容，直至 CSSOM 构建完毕。
-    css不阻塞 dom 解析，但是阻塞渲染。按照 google 的文档阐述是这样的，在 domcontentloaded 之前不会执行渲染，因为这个事件标志着 dom 和 cssom 的完成，然后才会开始构建 render tree。
-    
-    浏览器并不是css外部链接并不会阻塞浏览器的渲染，但是会阻塞文档的 loaded，以及出现样式闪烁。
-
-**ref:**
-
-[HTML - Web application APIs](https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model)
-
-[ECMAScript - Jobs and Job Queues](https://tc39.es/ecma262/#sec-jobs-and-job-queues)
-
-[从event loop规范探究javaScript异步及浏览器更新渲染时机 - 杨敬卓](https://github.com/aooy/blog/issues/5)

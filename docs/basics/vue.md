@@ -30,29 +30,29 @@ function Vue (options) {
 - initLifecycle 初始化生命周期 (定义周期状态标识: _isMounted, _isDestroyed...)
 - initEvents 初始化事件
 - initRender 初始化渲染函数
-- <font color="green">执行beforeCreate钩子 </font>
+- 执行beforeCreate钩子
 - initInjections 初始化injections 
 - initState 初始化reactivity; 
         
         设置数据props【数据劫持】、data【数据劫持】、Methods、computed、watcher等。
         定义data数据，方法以及事件，并且完成数据劫持observe以及给组件实例配置watcher观察者实例.
-- <font color="green">执行create钩子 </font> 
+- 执行create钩子
     已可以拿到data下的数据以及methods下的方法, 根据权限才能进入的建议在beforeRouteEnter中处理
 - 编译模板 
   
         判断入参中是否有el, 没有就等vm.$mount(el)调用; 
         然后再判断是否有template, 有则编译成render函数,否则编译el的outerHTML为template;
 
-- <font color="green">执行beforeMount钩子 </font> 
+- 执行beforeMount钩子 
   
         渲染render函数: 生成虚拟VDom->渲染成真实dom->替换vm.$el.
         vm._render创建VNode, vm._update渲染真实DOM.
 
-- <font color="green">执行Mounted钩子 </font> 
-- <font color="green">执行beforeUpdate钩子 </font> 
-- <font color="green">执行updated钩子 </font> 
-- <font color="green">执行beforeDestory钩子 </font> 
-- <font color="green">执行destoryed钩子 </font>
+- 执行Mounted钩子
+- 执行beforeUpdate钩子
+- 执行updated钩子
+- 执行beforeDestory钩子 
+- 执行destoryed钩子
 
       解除各种数据引用，移除事件监听，删除组件_watcher，删除子实例，删除自身self等
 
@@ -128,6 +128,21 @@ https://zhuanlan.zhihu.com/p/45081605
     当你利用索引直接设置一个数组项时，例如：`vm.items[indexOfItem] = newValue`
     当你修改数组的长度时，例如：`vm.items.length = newLength`
     push、pop、shift等
+
+defineProperty的缺陷
+
+对象属性新增删除无法检测，导致视图不更新
+数组的索引直接设置一个数组项无法检测，例：vm.items[indexOfItem] = newValue，新增索引也无法检测，导致视图不更新
+原因如下：
+
+Object.defineProperty 无法检测到对象属性的添加和删除 ，是因为这个方法只能监听已存在的属性。如果要解决可以使用Vue 提供的全局$set ，其本质也是给新增的属性手动 observer。
+数组的索引直接设置一个数组项无法检测，并不是defineProperty的锅，而是尤大在设计上对性能的权衡
+虽然说索引变更不是 defineProperty的锅，但新增索引的确是 defineProperty做不到的，所以就有了vue对数组的重写方法，还是跟$set一样，手动 observer。
+附：vue对数组的重写方法是指：
+重新定义数组的push,pop,shift,unshift,splice,sort,reverse方法，调用以上方法时key的订阅者列表会通知订阅者们“值已改变”。如果调用的是push,unshift,splice方法，递归处理新增加的项。
+
+https://blog.csdn.net/yuanfangyoushan/article/details/108962324
+
 
 vm.$set、Array.splice
 
@@ -356,3 +371,5 @@ updateChildren主要做了以下操作：
     JS引擎和DOM渲染引擎共享主线程，两者互斥，JS调用DOM API进行渲染，渲染完之后再执行JS代码，上下文切换时也很耗性能;<br>
     很多DOM API的读写都频繁涉及到Layout的重排，以确保返回值的准确，之后还会触发页面的重绘;<br>
     因此 **降低引擎切换频率、减小 DOM 变更规模才是DOM性能优化的关键。**
+
+https://github.com/aooy/blog/issues/2 解析vue2.0的diff算法
