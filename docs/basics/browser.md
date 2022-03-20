@@ -5,6 +5,39 @@ tags:
   - browser
 describe: browser
 ---
+## 浏览器相关一览
+### [浏览器简史](https://www.mozilla.org/zh-CN/firefox/browsers/browser-history)
+
+### [浏览器列表](https://en.wikipedia.org/wiki/List_of_web_browsers)
+  - 主流浏览器：
+    - Chrome、FireFox、IE、Opera、Safari; 
+    - Google Chrome、Amazon Silk、Apple Safari、QQ browser、UC Browser、Samsung Internet
+  - 内核分类：
+    - Trident内核：     360 Secure Browser、Internet Explorer、RealPlayer、Tencent Traveler(腾讯TT浏览器)
+    - Gecko内核：       Mozilla Firefox、Firefox for mobile、Yahoo! Browser
+    - Presto内核：      Opera、Internet Channel
+    - Blink内核：         **Chromium**：Google Chrome、Amazon Silk、Microsoft Edge
+    - Webkit内核：      Safari、Google Chrome for iOS、Firefox for iOS、GNOME Web、[X5内核](https://baike.baidu.com/item/X5%E5%86%85%E6%A0%B8)（手机QQ、微信）
+
+### [浏览器市场占有率分析](https://zhuanlan.zhihu.com/p/187066428) 
+
+### 专栏学习-《浏览器工作原理与实践》
+<!-- 14-极客时间/051-99/81-浏览器工作原理与实践 -->
+推荐阅读李兵老师的[《浏览器工作原理与实践》](https://time.geekbang.org/column/intro/100033601)专栏，从浏览器的运行机制，Http请求的执行过程，页面渲染流程，再细化到JS的执行机制（包括块级作用域、作用域链以及执行上下文），再到V8引擎的工作原理，浏览器的事件循环机制等。整个浏览器的知识体系都梳理了一遍，很值得进行学习。课程内容主要包含下面几个部分：
+
+- 开篇词 (1讲)
+- 宏观视角下的浏览器 (6讲)
+- 浏览器中的JavaScript执行机制 (5讲)
+- V8工作原理 (3讲)
+- 浏览器中的页面循环系统 (6讲)
+- 浏览器中的页面 (8讲)
+- 浏览器中的网络 (3讲)
+- 浏览器安全 (5讲)
+- 结束语 (3讲)
+- 课外加餐 (6讲)
+
+
+
 
 ## 事件代理
 如果一个节点中的子节点是动态生成的，那么子节点需要注册事件的话应该注册在父节点上
@@ -30,6 +63,10 @@ describe: browser
   - 不需要给子节点注销事件
 
 ## JS运行机制
+
+## 浏览器缓存机制
+
+
 
 ### 浏览器内核
 默认每个Tab页面一个进程，互不影响，控制页面渲染，脚本执行，事件处理等（有时候会优化，如多个空白tab会合并成一个进程
