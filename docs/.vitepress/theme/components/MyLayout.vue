@@ -17,7 +17,8 @@ onBeforeMount(()=>{
       repeat: "repeat-all",
       list: theme.value.musicList,
       music: theme.value.musicList[0],
-    }).mixin({
+    })
+    .mixin({
       mounted(){
         const player = document.getElementsByTagName('audio')[0]
         if(player && !window.aplayerAnimation){

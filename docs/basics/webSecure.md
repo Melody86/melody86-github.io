@@ -161,7 +161,7 @@ Websocket是HTML5的一个持久化的协议，它实现了浏览器与服务器
 ### 7. window.name + iframe
 window.name属性的独特之处：name值在不同的页面（甚至不同域名）加载后依旧存在，并且可以支持非常长的 name 值（2MB）。
 
-其中a.html和b.html是同域的，都是http://localhost:3000;而c.html是http://localhost:4000
+其中a.html和b.html是同域的，都是`http://localhost:3000`;而c.html是`http://localhost:4000`
 
 ### 8. location.hash + iframe
 
