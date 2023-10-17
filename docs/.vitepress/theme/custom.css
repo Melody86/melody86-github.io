@@ -1,6 +1,8 @@
 :root {
-    --c-brand: #646cff;
-    --c-brand-light: #747bff;
+    --vp-code-color: #476582;
+    --c-brand: #3eaf7c;
+    --c-brand-light: #4abf8a;
+    --vp-c-brand-1: #4abf8a;
   }
   /* plugin-search */
   .search-box {

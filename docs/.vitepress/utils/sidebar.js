@@ -40,19 +40,19 @@ const sidebar = async ()=>{
   return {
     '/basics/': [{
       text: '基础',
-      children: await getFilterFileArr('/basics/'),
+      items: await getFilterFileArr('/basics/'),
     }],
     '/special/': [{
       text: '进阶',
-      children: await getFilterFileArr('/special/'),
+      items: await getFilterFileArr('/special/'),
     }],
-    '/resume/': [{
-      text: '简历',
-      children: await getFilterFileArr('/resume/'),
-    }],
+    // '/resume/': [{
+    //   text: '简历',
+    //   children: await getFilterFileArr('/resume/'),
+    // }],
     '/': [{
       text: '首页',
-      children: await getFilterFileArr('/')
+      items: await getFilterFileArr('/')
     }]
   }
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vitepress dev docs",
     "build": "vitepress build docs",
-    "serve": "vitepress serve docs",
+    "serve": "vitepress serve docs --port 8091",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -33,7 +33,7 @@
     "@vuepress/shared-utils": "^1.9.5",
     "axios": "^0.21.4",
     "swiper": "^8.0.5",
-    "vitepress": "^0.21.6",
+    "vitepress": "^1.0.0-rc.20",
     "vue3-aplayer": "^1.7.3",
     "vuepress": "*",
     "vuepress-plugin-player": "^1.1.6"

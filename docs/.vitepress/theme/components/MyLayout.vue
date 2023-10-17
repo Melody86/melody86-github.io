@@ -3,7 +3,8 @@ import { computed, ref, onMounted, onBeforeMount, createApp } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import { useRoute, useData } from 'vitepress'
 import { isIOSorAndroid, } from '../../utils/index.js'
-import randomWords from './randomWords.vue'
+import RandomWords from './randomWords.vue'
+import ResumeExport from './ResumeExport.vue'
 
 const ismobile = isIOSorAndroid()
 
@@ -32,19 +33,41 @@ onBeforeMount(()=>{
       }
     }).mount('#aplayer-body')
   })
+
 })
 
 onMounted(()=>{
- 
+
 })
 
 const clickedHeaderPullDown = function(){
-  const nav = document.querySelector(".nav-bar")
-  if(nav){
-    const navheight = nav.offsetHeight
-    const swiperheight = document.querySelector('.header-img-swiper').offsetHeight
-    window.scrollTo(0, swiperheight + navheight)
+
+  const isElementVisible = (el) => {
+  const rect = el.getBoundingClientRect()
+    const vWidth = window.innerWidth || document.documentElement.clientWidth
+    const vHeight = window.innerHeight || document.documentElement.clientHeight
+  
+    
+    if (
+      rect.right < 0 ||
+      rect.bottom < 0 ||
+      rect.left > vWidth ||
+      rect.top > vHeight
+    ) {
+      return false
+    }
+  
+    return true
   }
+  const content = document.querySelector("#home-content-before")
+  const isInWindow = isElementVisible(content)
+  console.log(isInWindow, content.getBoundingClientRect().y, window.screen.height)
+  if(!isInWindow){
+    const navheight = content.offsetHeight
+    const swiperheight = document.querySelector('.header-img-swiper').offsetHeight
+    window.scrollTo({top: swiperheight + navheight, behavior: 'smooth'})
+  }
+
 }
 
 const { site, page, theme, frontmatter } = useData()
@@ -62,6 +85,35 @@ const musicList = computed(()=>{
   return theme.value.musicList || []
 })
 
+const onResumeExportClicked = (args)=>{
+  console.log('args', args, theme)
+  const aside = document.querySelector('aside')
+  const rightAside = document.querySelector('.aside')
+  const hasSidebar = document.querySelector('.VPContent.has-sidebar')
+  const resumeWorks = document.getElementById('resume-works')
+  const formerWorks = document.getElementById('作品及材料')
+  if(aside){
+    aside.style.display = 'none'
+  }
+  if(rightAside){
+    rightAside.style.display = 'none'
+  }
+  if(hasSidebar){
+    hasSidebar.style.paddingLeft = '0'
+    hasSidebar.style.paddingRight = '0'
+  }
+  if(resumeWorks){
+    resumeWorks.style.display = 'none'
+  }
+  if(formerWorks){
+    formerWorks.style.display = 'none'
+  }
+  const lastOL = document.querySelectorAll('ol')
+  if(lastOL.length > 0){
+    lastOL[lastOL.length - 1].style.display = 'none'
+  }
+}
+
 // automatic multilang check for AlgoliaSearchBox
 // const isMultiLang = computed(() => Object.keys(site.value.langs).length > 1)
 
@@ -69,36 +121,44 @@ const musicList = computed(()=>{
 
 <template>
   <Layout >
-    <template #home-hero id="homeHero">
+    <template #home-hero-before>
       <div v-if="isHasHeadImg" class="header-img-swiper">
         <ClientOnly>
-          <my-swiper class="my-swiper" :headPicList="headPicList"></my-swiper>
+          <my-swiper class="my-swiper" :headPicList="headPicList" />
         </ClientOnly>
 
-        <randomWords class="header-random"/>
+        <RandomWords class="header-random"/>
 
         <div v-if="!ismobile" class="header-pull-down" @click="clickedHeaderPullDown()"></div>
+        
+        <div id="aplayer-body" class="header-aplayer"/>
+
       </div>
+    </template>
+
+    <template #layout-bottom>
+        <ResumeExport v-if="frontmatter.resume" :onBtnClick="onResumeExportClicked" />
     </template>
     
   </Layout>
 
   <!-- https://github.com/SevenOutman/vue-aplayer/blob/develop/docs/README.md -->
   <!-- https://vueuse-motion-demo.netlify.app/installation.html -->
-  <div 
-    v-show="frontmatter.home"
-    id="aplayer-body" 
-    class="header-aplayer">
-  </div>
+
 
 </template>
 
 <style lang="less">
-.page{
-  .container{
-    max-width: 80% !important;
+
+.page-home-container{
+  .VPHome{
+    > div:last-child{
+      padding: 20px 10% !important;
+    }
   }
+  
 }
+
 @media screen and (max-width: 420px) {
   .page{
     .container{
@@ -191,11 +251,12 @@ const musicList = computed(()=>{
     }
 }
 .header-aplayer{
-  max-width: 300px;
-  bottom: 100px;
-  left: 20px;
   position: fixed !important;
-  z-index: 999;
+  width: 300px;
+  height: 76px;
+  bottom: 100px;
+  right: 20px;
+  z-index: 9999;
   .aplayer-info{
     margin-left: 10px !important;
     .aplayer-music{

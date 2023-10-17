@@ -1,5 +1,5 @@
 ---
-home: true
+layout: home
 date:  2021-05-17
 sidebar: false
 # heroImage: /images/pafc.jpg
@@ -39,21 +39,14 @@ headPicList:
   link: #  
 - src: /images/home/DSC01279.jpg
   link: #  
-
-# DSC01503.jpg
-# DSC01684.jpg
-# DSC01717.jpg
-# DSC01912.jpg
-# DSC01927.jpg
-# DSC01932.jpg
-# DSC01987.jpg
-# DSC02006-2.jpg
   
-footer: MIT Licensed | Copyright © 2022-present Melody Ryan
+pageClass: page-home-container
 ---
 
 
 <!-- ![](images/pafc.jpg) -->
+
+<div id="home-content-before" />
 
 ## 基于「VitePress」搭建的博客
 
@@ -76,3 +69,4 @@ footer: MIT Licensed | Copyright © 2022-present Melody Ryan
 
 在线地址:[blog.c9ai.com](https://blog.c9ai.com/)
 
+<div style="text-align:center; corlor: white; margin-top: 130px">MIT Licensed | Copyright © 2023-present Melody Ryan</div>

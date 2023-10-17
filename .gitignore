@@ -1,4 +1,6 @@
 node_modules
 *.html
 .DS_Store
-docs/.vitepress/dist
+docs/.vitepress/cache/*
+docs/.vitepress/dist/*
+docs/public/images/resume/*

@@ -25,13 +25,13 @@
                 randomWords.value = res.data.hitokoto
                 // <Home> 为AsyncComponent, onMounted的时候 #header-random-words可能还没挂载
                 const randElem = document.getElementById('header-random-words')
-                const randomWordsLen = getSentenceLen(res.data.hitokoto)  //中文两个字符，英文一个
+                const randomWordsLen = getSentenceLen(res.data.hitokoto)
                 if(randElem){
                     randElem.style.width = randomWordsLen / 2 + 'em'
                     const steps = `steps(${ res.data.hitokoto.length }, end)`
                     randElem.style.animationTimingFunction = steps
                     randElem.style.webkitAnimationTimingFunction = steps
-                    randElem.style.animationDuration = 200 * randomWordsLen+"ms"
+                    randElem.style.animationDuration = 200 * randomWordsLen + "ms"
 
                     let relus = getDocumentCSSRule('typing', CSSRule.KEYFRAMES_RULE)  //获取样式索引
                     console.log('relus::::', relus)
@@ -63,6 +63,7 @@
   word-break: break-all;
   border-right: 2px solid transparent;
   overflow: hidden;
+  line-height: 28px;
   /* animation: name duration timing-function delay iteration-count direction fill-mode; */
   animation: typing 7.5s infinite, blink-caret .75s step-end infinite;
   -webkit-animation: typing 7.5s infinite, blink-caret .75s step-end infinite;

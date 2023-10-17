@@ -13,13 +13,13 @@ const AsyncEffectSwiperComp = defineAsyncComponent(() =>
 
 import DefaultTheme from 'vitepress/theme' // To extend default theme.
 // import Docs from "./components/Docs.vue";
-import Tags from "./components/Tags.vue";
+import Tags from "./components/Tags.vue"
+import './custom.css'
 // import Comment from "./components/Comment.vue";
 // import Layout from "./components/Custom-Layout.vue";
 console.log('DefaultTheme1111111: ', Object.keys(DefaultTheme))
 
 import MyLayout from './components/MyLayout.vue'
-
 
 export default {
   ...(DefaultTheme),

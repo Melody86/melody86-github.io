@@ -6,9 +6,18 @@
 */ 
 export const getSentenceLen = function getSentenceLen(val) {
     let len = 0;
+    const reg = new RegExp("[\\u4E00-\\u9FFF]+", "g")
+    // animation 中setp(): 中文中空格算1/2，英文算1/3
     for (let i = 0; i < val.length; i++) {
       let length = val.charCodeAt(i);
-      if( length >= 0 && length <= 128 ) {
+      if(val[i] === ' ' && (reg.test(val[i-1]) || reg.test(val[i+1]))){
+        len += 0.33
+        continue
+      }else if(val[i] === ' '){
+        len += 0.5
+        continue
+      }
+      else if( length >= 0 && length <= 128 ) {
         len += 1;
       } else {
         len += 2;

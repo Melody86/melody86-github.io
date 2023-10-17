@@ -86,7 +86,7 @@ ES6模块新特性：
 package.json 的 "sideEffects" 属性作为标记，向 compiler 提供提示，表明项目中的哪些文件是 "pure(纯的 ES2015 模块)"，由此可以安全地删除文件中未使用的部分。
 
 ## Gulp
-，。
+
 
 # QA
 1. webpack如何挂载依赖？
