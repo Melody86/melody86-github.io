@@ -21,7 +21,7 @@ const onClick = ()=>{
 
 
 <template>
-  <Button class="resume-export-btn" @click="onClick"></Button>
+  <button class="resume-export-btn" @click="onClick"></button>
 </template>
 
 <style lang="less" scoped>

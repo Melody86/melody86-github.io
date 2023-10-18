@@ -131,14 +131,15 @@ const onResumeExportClicked = (args)=>{
         <RandomWords class="header-random"/>
 
         <div v-if="!ismobile" class="header-pull-down" @click="clickedHeaderPullDown()"></div>
-        
-        <div id="aplayer-body" class="header-aplayer"/>
 
+        
       </div>
     </template>
 
     <template #layout-bottom>
         <ResumeExport v-if="frontmatter.resume" :onBtnClick="onResumeExportClicked" />
+
+        <div v-show="!frontmatter.resume" id="aplayer-body" class="header-aplayer"/>
     </template>
     
   </Layout>

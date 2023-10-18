@@ -5,11 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-node",
+            "type": "node",
             "request": "launch",
             "name": "Launch Program",
             "skipFiles": [
                 "<node_internals>/**"
+            ],
+            "args": [
+                "build",
+                "docs"
             ],
             "program": "./node_modules/vitepress/bin/vitepress.js"
         }
