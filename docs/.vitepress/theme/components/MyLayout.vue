@@ -2,7 +2,7 @@
 import { computed, ref, onMounted, onBeforeMount, createApp } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import { useRoute, useData } from 'vitepress'
-import { isIOSorAndroid, } from '../../utils/index.js'
+import { isIOSorAndroid, useQueryUrl } from '../../utils/index.js'
 import RandomWords from './randomWords.vue'
 import ResumeExport from './ResumeExport.vue'
 
@@ -86,13 +86,19 @@ const musicList = computed(()=>{
   return theme.value.musicList || []
 })
 
+const isExport = ()=>{
+  return useQueryUrl(window?.location?.href, 'export')
+}
+
 const onResumeExportClicked = (args)=>{
   console.log('args', args, theme)
   const aside = document.querySelector('aside')
   const rightAside = document.querySelector('.aside')
   const hasSidebar = document.querySelector('.VPContent.has-sidebar')
   const resumeWorks = document.getElementById('resume-works')
-  const formerWorks = document.getElementById('作品及材料')
+  const formerWorks = document.getElementById('resume-stuff')
+  const exportBtn = document.querySelector('.resume-export-btn')
+
   if(aside){
     aside.style.display = 'none'
   }
@@ -109,9 +115,8 @@ const onResumeExportClicked = (args)=>{
   if(formerWorks){
     formerWorks.style.display = 'none'
   }
-  const lastOL = document.querySelectorAll('ol')
-  if(lastOL.length > 0){
-    lastOL[lastOL.length - 1].style.display = 'none'
+  if(exportBtn){
+    exportBtn.style.display = 'none'
   }
 }
 
@@ -137,7 +142,9 @@ const onResumeExportClicked = (args)=>{
     </template>
 
     <template #layout-bottom>
-        <ResumeExport v-if="frontmatter.resume" :onBtnClick="onResumeExportClicked" />
+      <ClientOnly>
+        <ResumeExport v-if="frontmatter.resume && isExport()" :onBtnClick="onResumeExportClicked" />
+      </ClientOnly>
 
         <div v-show="!frontmatter.resume" id="aplayer-body" class="header-aplayer"/>
     </template>

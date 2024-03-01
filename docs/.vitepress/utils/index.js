@@ -100,6 +100,17 @@ export const getDocumentCSSRule = function getDocumentCSSRule(name, type) {
     return cssRule
 }
 
+/*
+* 解析URL中的查询参数
+*/
+export const useQueryUrl = function useQueryUrl(url, name) {
+  if(!url || !name){
+    return ""
+  }
+  const searchParams = new URLSearchParams(url.split('?')?.[1]);
+  return searchParams.get(name) || '';
+}
+
 export default {
     getSentenceLen,
     isIOSorAndroid,
