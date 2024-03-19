@@ -8,16 +8,40 @@ describe:
 # 基础汇总2
 
 ### 7.3 Async和Await
-async function 用于申明一个 function 是异步的； await，用于等待一个异步方法执行完成；async/await是一个用同步思维解决异步问题的方案。
+- async 函数 用于声明一个函数是异步的。它可以让我们使用同步的写法来处理异步操作，使代码更加简洁易读。
+- await 用于等待一个异步方法执行完成。它会暂停当前函数的执行，直到异步方法返回结果。
+- async/await 是一个用同步思维解决异步问题的方案。它可以让我们像编写同步代码一样编写异步代码，避免了嵌套回调的“回调地狱”。
 
-async函数返回的是一个Promise。如果一个async函数的返回值不是promise，那么它将会被隐式地包装在一个promise中，可以使用then方法添加回调函数。如果没有在async函数中写return,那么promise对象resolve的值就是undefined
+async 函数的返回值:
 
-await 后面接 expression, 返回值为expression的值。await表达式会暂停整个async函数的执行进程并出让其控制权。当await后面的函数为promise时，要等resolve或reject返回之后才会恢复进程，promise返回值会作为await表达式的返回结果。当await后面的函数无返回值时表达式结果为undefined。如果函数体内有一个await表达式，async函数就一定会异步执行。在await表达式之后的代码可以被认为是存在在链式调用的then回调中，多个await表达式都将加入链式调用的then回调中，返回值将作为最后一个then回调的返回值
+- 如果 async 函数的返回值不是 Promise，那么它会隐式地包装在一个 Promise 中。
+- 如果没有在 async 函数中写 return 语句，那么 Promise 对象的 resolve 值就是 undefined。
+
+await 表达式:
+
+- await 后面接 expression，返回值为 expression 的值。
+- await 表达式会暂停整个 async 函数的执行进程并出让其控制权。
+- 当 await 后面的函数为 Promise 时，会等待 resolve 或 reject 返回之后才会恢复进程。
+- Promise 的返回值会作为 await 表达式的返回值。
+- 当 await 后面的函数无返回值时，表达式结果为 undefined。
+- 如果函数体内有一个 await 表达式，async 函数就一定会异步执行。
+- 在 await 表达式之后的代码可以被认为是存在在链式调用的 then 回调中。
+- 多个 await 表达式都将加入链式调用的 then 回调中，返回值将作为最后一个 then 回调的返回值。
 
 ### 7.5 Promise
-promise是一个对象，是异步编程的一种解决方案，通过链式调用解决回调地狱问题。
+Promise 是一个对象，代表一个异步操作的最终完成（成功或失败）及其结果。它是异步编程的一种解决方案，通过链式调用解决回调地狱问题。
 
-每个promise有三种状态，pending等待态,fulfilled成功态，rejected失败态。一个 promise 对象只能改变一次。无论成功还是失败，都会有一个结果数据。成功的结果数据一般称为 value，而失败的一般称为 reason。
+Promise 的状态:
+
+- Pending 等待态: 初始状态，表示异步操作尚未完成。
+- Fulfilled 成功态: 表示异步操作成功完成，并带有成功结果。
+- Rejected 失败态: 表示异步操作失败，并带有失败原因。
+
+Promise 的特点:
+
+- 一个 Promise 对象只能改变一次状态。
+- 无论成功还是失败，都会有一个结果数据。
+- 成功的结果数据一般称为 value，而失败的结果一般称为 reason。
 
 **手写promise**
 ```js
@@ -55,6 +79,7 @@ function myPromise(exector){
 }
 
 ```
+
 **手写 Promise.then**
 ```js
 myPromise.prototype.then = function(onFullfiled, onRejected){
@@ -92,16 +117,24 @@ myPromise.prototype.all = function(promiseArray){
   })
 }
 ```
-Promise.all 入参可以不是数组，当其中一个任务报错时，其他还会正常执行
+Promise.all 入参可以不是数组，可以是任何可迭代对象。当其中一个任务报错时，其他还会正常执行
 
 ### 7.6 原型链与继承
 #### 7.6.1 构造函数constructor
-每个类都有一个默认无参的构造函数，初始化该类(new)的时候，先走构造函数，用于初始化成员变量和方法。
+构造函数 是一个类的特殊方法，用于创建该类的新实例。它会在使用 new 关键字创建对象时自动执行。
 
-    在构造函数中使用时，super关键字将单独出现，并且必须在使用this关键字之前使用。
-    super关键字也可以用来调用父对象上的函数。
-    默认无参构造函数时, JS会自动在第一行添加super()函数，可以不用手动添加；
-    自定义构造函数时，需要手动调用super函数, 否则会报错。
+构造函数的作用:
+- 初始化成员变量和方法
+- 创建新对象
+  
+super 关键字
+- super 关键字 用于访问父类中的成员和方法。
+
+在构造函数中使用 super 关键字:
+- 在构造函数中使用 super 关键字时，必须在使用 this 关键字之前使用。
+- super 关键字可以用来调用父类中的构造函数。
+- 默认情况下，JavaScript 会自动在无参构造函数中添加 super() 语句。
+- 如果自定义了构造函数，则需要手动调用 super() 语句，否则会报错。
 
 构造函数分为 实例成员 和 静态成员
 - 实例成员：实例成员就是在构造函数内部，通过this添加的成员。实例成员只能通过实例化的对象来访问。
@@ -121,26 +154,26 @@ Star.sex = '女';
 **new一个新对象的过程，发生了什么？**
 
     (1) 创建空对象 son {}
-    (2) 准备原型链连接son.__proto__ = Father.prototype
-    (3) 重新绑定this，使构造函数的this指向新对象Father.call(this)
-    (4) 为新对象属性赋值son.name
-    (5) 返回this return this，此时的新对象就拥有了构造函数的方法和属性了
+    (2) 将对象的原型链连接到父类对象的原型上：son.__proto__ = Father.prototype
+    (3) 将 this 指针重新绑定到新对象上：使构造函数的this指向新对象Father.call(this)
+    (4) 执行构造函数的代码，为新对象添加属性和方法：son.name
+    (5) 返回新对象
 
 #### 7.6.2 原型
-
 每一个javascript对象(除null外)创建的时候，都会与之关联另一个对象（父类对象），这个父类对象就是我们所说的原型，每一个对象都会从原型中“继承”属性。
 
     MDN:
-      每个对象拥有一个原型对象，对象以其原型为模板、从原型继承方法和属性。
-      原型对象也可能拥有原型，并从中继承方法和属性，一层一层、以此类推。
-      这种关系常被称为原型链 (prototype chain)，它解释了为何一个对象会拥有定义在其他对象中的属性和方法。
+    + 每个对象拥有一个原型对象，对象以其原型为模板、从原型继承方法和属性。
+    + 原型对象也可能拥有原型，并从中继承方法和属性，一层一层、以此类推。
+    + 这种关系常被称为原型链 (prototype chain)，它解释了为何一个对象会拥有定义在其他对象中的属性和方法。
 
 - **对象的原型prototype** 【可以通过Object.getPrototypeOf(obj)或obj.__proto__获得】是每个实例都有的属性<br>
 - **构造函数的prototype属性** 是构造函数的属性。JS实现类，是在 “...在对象实例和它的构造器之间建立一个链接（它是__proto__属性，是从构造函数的prototype属性派生的），之后通过上溯原型链，在构造器中找到这些属性和方法。”(MDN)
 
 JS中，每个函数都有一个prototype属性，这个属性指向函数的原型对象。
 
-\__proto__ 是每个对象都有的属性, 大多数情况下，\__proto__可以理解为“构造器的原型”，但是通过 Object.create()创建的对象有可能不是， Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的__proto__。
+`__proto__` 是每个对象都有的属性, 大多数情况下，`__proto__`可以理解为“构造器的原型”，但是通过 Object.create()创建的对象有可能不是， Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的`__proto__`。
+
 ```js
   __proto__ === constructor.prototype
 
@@ -648,4 +681,29 @@ https://codesandbox.io/s/javascript-shouxieti-rfo2c?file=/src/index.js
     每个对象都有\__proto__的属性，大多情况下指向构造函数的原型. <br>
     每个函数都有一个prototype属性，这个属性指向函数的原型对象. <br>
     class实际是function的语法糖, P.__proto__ 实际是Function.prototype. <br>
+
+说 class 是 Function 的语法糖，是因为 class 本质上可以被 Function 实现，两者在功能上没有本质区别。
+class 语法最终会被编译成 Function 代码。例如：
+
+```js
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+
+  sayHello() {
+    console.log(`Hello, my name is ${this.name}`);
+  }
+}
+
+// 编译后代码
+
+function Person(name) {
+  this.name = name;
+}
+
+Person.prototype.sayHello = function() {
+  console.log(`Hello, my name is ${this.name}`);
+};
+```
     

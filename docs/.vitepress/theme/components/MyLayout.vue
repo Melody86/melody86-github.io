@@ -92,8 +92,9 @@ const isExport = ()=>{
 
 const onResumeExportClicked = (args)=>{
   console.log('args', args, theme)
-  const aside = document.querySelector('aside')
-  const rightAside = document.querySelector('.aside')
+  const aside = document.querySelector('.aside')
+  const outline = document.querySelector('.VPDocAsideOutline')
+  
   const hasSidebar = document.querySelector('.VPContent.has-sidebar')
   const resumeWorks = document.getElementById('resume-works')
   const formerWorks = document.getElementById('resume-stuff')
@@ -102,8 +103,8 @@ const onResumeExportClicked = (args)=>{
   if(aside){
     aside.style.display = 'none'
   }
-  if(rightAside){
-    rightAside.style.display = 'none'
+  if(outline){
+    outline.style.display = 'none'
   }
   if(hasSidebar){
     hasSidebar.style.paddingLeft = '0'

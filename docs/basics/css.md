@@ -13,8 +13,8 @@ describe: css
 
 3. `opacity:0;`  不改变页面布局，可添加点击事件，transition有效
 
-        transition    transition-propert | transition-duration | transition-timing-function | transition-delay 
-        渡效果的 CSS 属性的名称 | 完成过渡效果耗时 | 速度曲线 | 何时开始; 默认值：all 0 ease 0
+  transition    transition-propert | transition-duration | transition-timing-function | transition-delay 
+  渡效果的 CSS 属性的名称 | 完成过渡效果耗时 | 速度曲线 | 何时开始; 默认值：all 0 ease 0
 
 ## ShadowDOM
 
@@ -89,7 +89,7 @@ element.getBoundingClientRect().width/height;
 
 ## BFC
 
-[BFC](https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Block_formatting_context)块级格式上下文(Block Formatting Context)，是块盒子的布局过程发生的区域，也是浮动元素与其他元素交互的区域。
+[BFC](https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Block_formatting_context)块级格式上下文(Block Formatting Context)，指的是一个独立的渲染区域，其中包含的元素会按照一定的规则进行布局。
 
 1. 下列方式会创建块格式化上下文：
 
@@ -111,9 +111,13 @@ element.getBoundingClientRect().width/height;
   
 3. 应用:
   - 利用BFC避免margin重叠，外层用div包裹
-  - 清除浮动：overflow: hidden
+  - 清除浮动：创建一个包含浮动的 BFC，通常的做法是设置父元素 overflow: auto 或者设置其他的非默认的 overflow: visible 的值
+  - 外边距合并：块的上外边距 (margin-top) 和下外边距 (margin-bottom) 有时合并 (折叠) 为单个边距，其大小为单个边距的最大值 (或如果它们相等，则仅为其中一个)。
+
+
 
 **清除浮动**
+浮动元素会脱离文档流，导致其后的元素向上流动，造成布局混乱。
 
 创建一个会包含这个浮动的 BFC，通常的做法是设置父元素 overflow: auto 或者设置其他的非默认的 overflow: visible 的值。可能会出现一些不需要的东西，比如滚动条或者一些剪切的阴影。也可以使用 display: flow-root (兼容性)
 
@@ -125,8 +129,8 @@ element.getBoundingClientRect().width/height;
     1. 同一层相邻元素之间
     2. 没有内容将父元素和子元素分开
     3. 空的块级元素
-## CSS 垂直居中
 
+## CSS 垂直居中
 * 单行文本：line-height 和 height高度设置成一样;
 
 * 已知高度的块级子元素，采用绝对定位和负边距

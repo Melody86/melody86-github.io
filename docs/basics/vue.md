@@ -30,25 +30,25 @@ function Vue (options) {
 - initLifecycle 初始化生命周期 (定义周期状态标识: _isMounted, _isDestroyed...)
 - initEvents 初始化事件
 - initRender 初始化渲染函数
-- 执行beforeCreate钩子
+- 执行`beforeCreate`钩子 【data、el未初始化】
 - initInjections 初始化injections 
 - initState 初始化reactivity; 
         
         设置数据props【数据劫持】、data【数据劫持】、Methods、computed、watcher等。
         定义data数据，方法以及事件，并且完成数据劫持observe以及给组件实例配置watcher观察者实例.
-- 执行create钩子
+- 执行`create`钩子 【data、el已初始化，但DOM元素未挂载】
     已可以拿到data下的数据以及methods下的方法, 根据权限才能进入的建议在beforeRouteEnter中处理
 - 编译模板 
   
         判断入参中是否有el, 没有就等vm.$mount(el)调用; 
         然后再判断是否有template, 有则编译成render函数,否则编译el的outerHTML为template;
 
-- 执行beforeMount钩子 
+- 执行`beforeMount`钩子 
   
         渲染render函数: 生成虚拟VDom->渲染成真实dom->替换vm.$el.
         vm._render创建VNode, vm._update渲染真实DOM.
 
-- 执行Mounted钩子
+- 执行Mounted钩子 【DOM元素挂载完成】
 - 执行beforeUpdate钩子
 - 执行updated钩子
 - 执行beforeDestory钩子 
@@ -78,8 +78,8 @@ if (vm.$options.el) {
 
 **总结**
 
-    组件生命周期执行顺序
-    beforeCreate、created、beforeMount、mounted、beforeUpdate、updated、activated、deactivated、beforeDestory、destoryed
+组件生命周期执行顺序：
+  beforeCreate、created、beforeMount、mounted、beforeUpdate、updated、activated、deactivated、beforeDestory、destoryed
     
     - vue先进行生命周期、事件、渲染函数等的初始化;
     - 执行beforeCreate钩子，此时data和el均未初始化，值为undefined;
@@ -107,19 +107,42 @@ https://zhuanlan.zhihu.com/p/45081605
 
 ![avatar](https://cn.vuejs.org/images/data.png)
 
-在执行beforeCreate钩子之后，执行initSate过程中对props进行defineReactive、对data进行observe处理。observer尝试实例化observer对象，递归的对对象和数组调用defineReactive。每个属性在被执行 defineReactive方法时，都创建了一个dep实例。
+### 2.1 实现原理:
+
+数据劫持:
+- 使用 Object.defineProperty() 监听对象的属性变化。
+- 当属性变化时，触发依赖收集和更新视图。
+
+依赖收集:
+- 每个组件实例都有一个 Watcher 观察者实例。
+- Watcher 观察者实例会收集所有依赖它的数据属性的 Dep 实例。
+- 当数据属性变化时，会通知所有依赖它的 Watcher 观察者实例进行更新。
+
+更新视图:
+- Watcher 观察者实例会根据数据变化更新视图。
+- Vue.js 提供了多种更新视图的方式，例如 diff 算法和虚拟 DOM。
+
+在执行beforeCreate钩子之后，执行initSate过程中对props进行defineReactive、对data进行observe处理。observer尝试实例化observer对象，递归的对 对象和数组调用defineReactive。每个属性在被执行 defineReactive方法时，都创建了一个dep实例。
 
 在getter函数中进行依赖收集：getter方法相对于dep实例形成了闭包，巧妙的保存了dep实例。当某个观察者函数访问了某个数据，就通过dep实例进行收集。即Dep.target(Watcher)存在时，通过dep.depend()最终将当前watcher添加至subs观察者数组中。
 在setter函数中调用dep.notify()进行响应分发。
-### 2.1 依赖收集: 
+### 2.2 依赖收集: 
 
 观察者Watcher：视图、计算属性、侦听器; <br>
 观察目标Dep：依赖的数据;
 
-    Dep：数据的属性都会有Dep类实例，它内部有个subs队列，保存着依赖本数据的观察者(依赖数据的Watcher实例)，当数据变化时，调用dep.notify()通知观察者。
-    Watcher：扮演观察者的角色，进行观察者函数的包装处理。如render()函数，会被进行包装成一个Watcher实例。
-        - 模板渲染：this._watcher = new Watcher(this, render, this._update)
-    Observer：辅助的可观测类，数组/对象通过它的转化，可成为可观测数据。
++ Dep：数据的属性都会有Dep类实例，它内部有个subs队列，保存着依赖本数据的观察者(依赖数据的Watcher实例)，当数据变化时，调用dep.notify()通知观察者。
++ Watcher：扮演观察者的角色，进行观察者函数的包装处理。如render()函数，会被进行包装成一个Watcher实例。
+  - 模板渲染：this._watcher = new Watcher(this, render, this._update)
++ Observer：辅助的可观测类，数组/对象通过它的转化，可成为可观测数据。
+
+常见问题:
+
+- 数组变更无法监听:
+  - 无法监听数组的 push、pop、shift 等方法。
+  - 可以使用 vm.$set 或 Array.prototype.splice 方法进行监听。
+- 对象属性新增或删除无法监听:
+  - 可以使用 Vue.set 方法进行监听。
 
 访问对象属性，其取值与赋值操作，都能被Object.defineProperty()成功拦截，但是Object.defineProperty()在处理数组时除了重新赋值一个数组外，其他操作(根据索引赋值、push、pop、shift等)都不能被setter检测到。可以通过vm.$set、Array.splice 响应数组元素和长度的变化
 
@@ -236,30 +259,36 @@ https://mp.weixin.qq.com/s/dgC6zOkpo1ghyUYS680oWw
 
 Vue3简要变化：利用新的语言特性(es6)、解决架构问题
 
-Vue3新特性:
-- 速度更快
-- 体积减少
-- 更易维护
-- 更接近原生
-- 更易使用
+1. 速度更快
+- 重写虚拟 DOM 实现，使用更少内存和更快的 diff 算法。
+- 编译模板优化，减少不必要的渲染工作。
+  
+2. 体积更小
+- 通过 tree-shaking 和按需加载，只打包所需的代码。
+- 移除了过时的代码和依赖项。
+  
+3. 更易维护
+- 引入 Composition API，提供更灵活的代码组织方式。
+- 更好的 TypeScript 支持。
+  
+4. 更接近原生
+-  使用 Proxy 监听数据变化，而不是 Object.defineProperty。
+-  更好的浏览器兼容性，包括 IE 11。
 
-1. 重写虚拟Dom实现
-2. 编译模板优化
-3. 体积更小
-        
-        通过webpack的tree-shaking功能，可以将无用模块“剪辑”，仅打包需要的能够tree-shaking，有两大好处：
-          对开发人员，能够对vue实现更多其他的功能，而不必担忧整体体积过大
-          对使用者，打包出来的包体积变小了
-4. 更易维护
-   compositon Api
+5. 更易使用
+- 提供了一些新的 API 和语法糖，简化开发体验。
 
-        可与现有的Options API一起使用
-        灵活的逻辑组合与复用
-        Vue3模块可以和其他框架搭配使用
-5. typescript支持
-6. Vue2 通过Object.defineProperty实现响应式, 不能兼容IE8以下浏览器;
+针对架构问题的解决方案：
+- 组件化: 鼓励更细粒度的组件开发，提高代码复用性。
+- 状态管理: 引入 Vuex 库，帮助管理复杂应用的状态。
+- 路由管理: 引入 Vue Router 库，帮助管理应用的路由。
 
-7. **Object.prototype vs Proxy**
+其他重要变化：
+- 支持 TypeScript
+- 支持 Web Components
+- 支持 SSR (服务端渲染)
+
+1. **Object.prototype vs Proxy**
 
     Object.prototype 
       - 检测不到对象属性的添加和删除<br>
@@ -304,15 +333,50 @@ export function initUse (Vue: GlobalAPI) {
 ```
 
 ## 5. 传值
-vue中常规的通信方案
+Vue 中常见的通信方案：
+1. 通过 props 传递数据:
+- 父组件向子组件传递数据。
+- 子组件通过 props 接收数据。
+- 适合父子组件之间的数据传递。
 
-    通过 props 传递、 $emit 触发自定义事件
-    使用 ref
-    EventBus: 兄弟组件传值。兄弟组件通过$emit触发自定义事件，$emit第二个参数为传递的数值。另一个兄弟组件通过$on监听自定义事件
-    parent或root：通过共同祖辈$parent或者$root搭建通信侨联
-    attrs 与 listeners
-    Provide 与 Inject
-    Vuex
+2. 通过 $emit 触发自定义事件:
+- 子组件向父组件传递数据。
+- 子组件通过 $emit 触发自定义事件，并传递数据。
+- 父组件通过 $on 监听自定义事件，并接收数据。
+- 适合父子组件之间的数据传递。
+
+3. 使用 ref:
+- 在父组件中获取子组件的实例。
+- 通过子组件实例的属性或方法访问子组件的数据或方法。
+- 适合父子组件之间的数据传递，以及需要在父组件中操作子组件的场景。
+
+4. EventBus:
+- 组件之间通过一个事件总线进行通信。
+- 组件通过 $emit 触发事件，并传递数据。
+- 组件通过 $on 监听事件，并接收数据。
+- 适合兄弟组件、跨层级组件之间的数据传递。
+
+5. parent 或 root:
+- 通过共同祖辈的 $parent 或 $root 属性访问数据。
+- 适合父子组件、兄弟组件之间的数据传递，以及需要访问根组件数据的情况。
+
+6. attrs 与 listeners:
+- 父组件向子组件传递非 props 的属性。
+- 子组件通过 attrs 接收非 props 的属性。
+- 父组件向子组件传递事件监听器。
+- 子组件通过 listeners 接收事件监听器。
+- 适合父子组件之间传递非 props 的数据和事件监听器。
+
+7. Provide 与 Inject:
+- 组件之间注入依赖关系。
+- Provide 组件提供依赖关系。
+- Inject 组件注入依赖关系。
+- 适合跨层级组件之间的数据传递，以及需要解耦组件依赖关系的场景。
+
+8. Vuex:
+- 集中式状态管理。
+- 组件通过 Vuex 访问和修改状态。
+- 适合大型应用的状态管理。
 
 ## 6.diff算法
 https://mp.weixin.qq.com/s/oZKowf4YLsVi67z777VKmA <br>
@@ -343,6 +407,21 @@ updateChildren主要做了以下操作：
     设置新旧VNode的头尾指针
     新旧头尾指针进行比较，循环向中间靠拢，根据情况调用patchVnode进行patch重复流程、调用createElem创建一个新节点，从哈希表寻找 key一致的VNode 节点再分情况操作
 
+## 7. RealDOM 和 Virtual DOM
+Virtual Dom 虚拟DOM：本质上是以JavaScript对象形式存在的DOM的描述。
+
+RealDOM 和 Virtual DOM的区别：
+- 虚拟DOM不会进行重排和重绘，而真实DOM会频繁重排与重绘；
+- 虚拟 DOM 的总损耗是“虚拟 DOM 增删改+真实 DOM 差异增删改+排版与重绘”，真实 DOM 的总损耗是“真实 DOM 完全增删改+排版与重绘”
+
+| 特性 | 真实 DOM | 虚拟 DOM | 详细说明 |
+|---|---|---|---|
+| 易用性 | 易用 | 简单方便 | 真实 DOM 可以直接操作，但需要编写大量代码来管理 DOM 元素。虚拟 DOM 使用类似 HTML 的语法来描述 UI，更加直观易懂。 |
+| 效率 | 低 | 高 | 真实 DOM 的解析速度慢，内存占用量过高。虚拟 DOM 只是一个轻量级的 JavaScript 对象，占用内存更少，解析速度更快。 |
+| 性能 | 差 | 好 | 频繁操作真实 DOM 容易导致重绘与回流，影响性能。虚拟 DOM 可以通过 diff 算法来最小化 DOM 操作的次数，提高性能。 |
+| 跨平台 | 否 | 是 | 真实 DOM 是浏览器原生的 API，无法跨平台使用。虚拟 DOM 可以通过 React Native 等框架来实现跨平台开发。 |
+| 极致优化 | 可 | 不可 | 真实 DOM 可以进行针对性的极致优化。虚拟 DOM 存在一定的抽象层，无法进行极致优化。 |
+| 首次渲染速度 | 快 | 稍慢 | 首次渲染大量 DOM 时，虚拟 DOM 需要进行额外的计算，速度比直接操作真实 DOM 稍慢。 |
 
 
 # QA 
@@ -361,15 +440,36 @@ updateChildren主要做了以下操作：
     
     屏幕刷新率60次/秒，每帧的合理耗时应该为: 1 秒/ 60 = 16.66 毫秒，但实际上浏览器还需要进行处理工作，因此每帧的执行耗时应该在10ms内完成，否则会出现抖动。
 
-    - 执行过程: JavaScript -> Style -> Layout -> Paint -> Compiste.  绘制Paint，就是填充像素的过程<br>
+    - 执行过程: JavaScript -> Style -> Layout -> Paint -> Composite.  绘制Paint，就是填充像素的过程<br>
     - 重排：修改"Layout"属性，也就是改变元素的几何属性(宽度、高度、左侧或顶部位置等)，那么浏览器将必须检查所有其他元素，然后“自动重排”页面。<br>
     - 重绘：修改“paint only”属性(背景图片、文字颜色或阴影等)，即不会影响页面布局的属性，则浏览器会跳过布局，但仍将执行绘制。<br>
-    - 合成：如果更改一个既不用重新布局也不用绘制的属性，则浏览器将只进行 合成Compiste，例如动画或滚动.
+    - 合成：如果更改一个既不用重新布局也不用绘制的属性，则浏览器将只进行 合成Composite，例如动画或滚动.
+  
+     优化:
+     - 减少 DOM 操作
+     - 使用 CSS 动画代替 JavaScript 动画
+     - 延迟加载资源
+     - 使用 requestAnimationFrame 进行动画
 
 4. 操作DOM为什么是昂贵的？
    
-    JS引擎和DOM渲染引擎共享主线程，两者互斥，JS调用DOM API进行渲染，渲染完之后再执行JS代码，上下文切换时也很耗性能;<br>
-    很多DOM API的读写都频繁涉及到Layout的重排，以确保返回值的准确，之后还会触发页面的重绘;<br>
-    因此 **降低引擎切换频率、减小 DOM 变更规模才是DOM性能优化的关键。**
+- JS引擎和DOM渲染引擎共享主线程，两者互斥，JS调用DOM API进行渲染，渲染完之后再执行JS代码，上下文切换时也很耗性能;<br>
+- 很多DOM API的读写都频繁涉及到Layout的重排，以确保返回值的准确，之后还会触发页面的重绘;<br>
+- 因此 **降低引擎切换频率、减小 DOM 变更规模才是DOM性能优化的关键。**
+
+5. vue2和vue3的响应式能否监听到数组push的变化
+
+Vue2： 无法直接监听数组 push 的变化。
+  - 原因：Vue2 使用 Object.defineProperty 监听数据变化，而 Object.defineProperty 无法监听数组的某些变动，例如 push、pop、shift 等方法。
+  - 解决方案：
+    - 使用 vm.$set 方法修改数组
+    - 使用 Array.prototype.splice 方法修改数组
+    - 使用第三方库，例如 Vue.js-array-change
+
+Vue3：可以直接监听数组 push 的变化。
+  - 原因：Vue3 使用 Proxy 监听数据变化，而 Proxy 可以监听数组的变动。
+  - 注意事项：
+      - 仍然无法监听数组的某些变动，例如 sort、reverse 等方法
+      - 需要使用 reactive 方法将数组转换为响应式对象
 
 https://github.com/aooy/blog/issues/2 解析vue2.0的diff算法

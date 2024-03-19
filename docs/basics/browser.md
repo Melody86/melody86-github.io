@@ -101,11 +101,11 @@ XMLHttpRequest在连接后是通过浏览器新开一个线程请求， 将检�
 
 
 ## 非I/O的异步API setTimeout()、setInterval()、process.nextTick()、setImmediate()
-    setTimeout()和setInterval()与浏览器中的API是一致的，分别用于单次和多次定时执行任务。
+setTimeout()和setInterval()与浏览器中的API是一致的，分别用于单次和多次定时执行任务。
 
-    调用setTimeout()和setInterval()创建的定时器会被插入到定时器观察者内部的一个红黑树中，每次Tick执行时，会从该红黑树中迭代取出定时器对象，检查是否超过定时时间，如果超过，就形成一个时间，它的回调函数将立即执行。
+  - 调用setTimeout()和setInterval()创建的定时器会被插入到定时器观察者内部的一个红黑树中，每次Tick执行时，会从该红黑树中迭代取出定时器对象，检查是否超过定时时间，如果超过，就形成一个时间，它的回调函数将立即执行。
 
-    弊端：
+  - 弊端：
 
     1）并非精确的（在容忍范围内）。尽管事件循环十分快，但是如果某一次循环占用的时间较多，那么下次循环时，它也许已经超时很久了。譬如通过setTimeout()设定一个任务在10毫秒后执行，但是在9毫秒后，有一个任务占用了5毫秒的CPU时间片，再次轮到定时器执行时，时间已经过期4毫秒。
 
@@ -205,8 +205,8 @@ requestAnimationFrame
 
 1. 外部css 文件的加载会阻塞 dom解析 么？会阻塞渲染么？
 
-    既不会阻塞解析，也不会阻塞渲染(chrome观察得出)
-    但延迟加载的css会导致样式重新计算，从而导致 无样式闪烁 问题。
+    不会阻塞DOM解析，但会阻塞DOM渲染
+    延迟加载的css会导致样式重新计算，从而导致 无样式闪烁 问题。
 
     默认情况下，CSS 被视为阻塞渲染的资源，这意味着浏览器将不会渲染任何已处理的内容，直至 CSSOM 构建完毕。
     css不阻塞 dom 解析，但是阻塞渲染。按照 google 的文档阐述是这样的，在 domcontentloaded 之前不会执行渲染，因为这个事件标志着 dom 和 cssom 的完成，然后才会开始构建 render tree。
@@ -214,7 +214,7 @@ requestAnimationFrame
     浏览器并不是css外部链接并不会阻塞浏览器的渲染，但是会阻塞文档的 loaded，以及出现样式闪烁。
 
 
-从event loop规范探究javaScript异步及浏览器更新渲染时机 https://github.com/aooy/blog/issues/5
+[从event loop规范探究javaScript异步及浏览器更新渲染时机](https://github.com/aooy/blog/issues/5) 
 
 
 - 进程：CPU资源分配最小单位，可包含多个线程
