@@ -33,6 +33,19 @@ useEffect第一个参数接受一个回调函数，默认情况下，useEffect�
 
 useEffect回调函数中可以返回一个清除函数，这是effect可选的清除机制，相当于类组件中componentwillUnmount生命周期函数，可做一些清除副作用的操作。
 
+```js
+useEffect(() => {
+    // 假设我们在这里设置了一些副作用，如设置一个间隔定时器
+    const intervalId = setInterval(() => {
+      setCount(c => c + 1);
+    }, 1000);
+ 
+    // 返回一个清理函数，用于在组件卸载或重新渲染前清理副作用
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []); // 空依赖数组意味着这个 effect 只会在组件挂载时执行一次
+```
 #### useCallback 和 useMemo 的区别
 useCallback 和 useMemo 都是 React 中用于缓存函数或值的 Hook。它们的主要区别在于：
 
@@ -151,8 +164,8 @@ handleClick = () => {
 ```js
 Object.assign(
   previousState,
-  {index: state.count+ 1},
-  {index: state.count+ 1},
+  { index: state.count+ 1 },
+  { index: state.count+ 1 },
   ...
 )
 // 由于后面的数据会覆盖前面的更改，所以最终只加了一次
@@ -160,7 +173,7 @@ Object.assign(
 
 **setTimeout和原生DOM同步性**
 
-setTimeout 和原生 DOM 事件都是由浏览器触发的，它们不在 React 的控制范围内。因此，React 不会在这些情况下进行批量更新，setState 调用将立即执行。因此，在setTimeout或者原生dom事件中，setState是同步。
+setTimeout、setInterval 和原生 DOM 事件都是由浏览器触发的，它们不在 React 的控制范围内。因此，React 不会在这些情况下进行批量更新，setState 调用将立即执行。因此，在setTimeout或者原生dom事件中，setState是同步。
 
 ```js
 changeText() {
@@ -173,6 +186,22 @@ changeText() {
 }
 ```
 
+| React 版本 | 同步 `setState` | 异步 `setState` |
+|---|---|---|
+| React 17 之前 | 原生事件处理程序（`onclick`、`addEventListener`等）、计时器函数（`setTimeout`、`setInterval`等） | 合成事件处理程序、生命周期钩子 |
+| React 18 | 不存在 | 所有 `setState` 调用 |
+
+      - 在 React 18 中，由于所有 setState 都是异步的，因此您不能再依赖 setState 的立即性。如果您需要在状态更新后立即执行一些操作，请使用回调函数或更新函数。
+      - 批量更新意味着多个 setState 调用可能会被合并为单个更新。这意味着您不能保证 setState 的确切执行顺序。
+      
+      componentWillMount：在组件挂载之前触发
+      componentDidMount：在组件挂载之后触发
+      componentWillUpdate：在组件更新之前触发
+      componentDidUpdate：在组件更新之后触发
+      componentWillUnmount：在组件卸载之前触发
+
+React 将多个合成事件合并为单个更新批处理：当多个合成事件在同一事件循环中触发时，React 会将它们合并为单个更新批处理。这意味着 React 只会对 DOM 进行一次更新，而不是多次更新。这可以进一步提高性能。
+
 ## 8. React事件机制
 
 React 事件机制具有以下特点：
@@ -182,6 +211,13 @@ React 事件机制具有以下特点：
 - 合成事件: React 使用合成事件来抽象浏览器原生事件，这使得事件处理程序更加一致。
 - 冒泡: 事件会从子元素逐级向上冒泡到父元素，直到被某个元素处理。
 - 捕获: 事件可以从父元素逐级向下捕获到子元素，直到被某个元素处理。
+
+      合成事件处理程序是 React 用于处理事件的函数。它们与原生事件处理程序类似，但它们提供了额外的功能，例如事件冒泡和捕获。合成事件处理程序可以通过以下方式添加到组件上：
+      onClick：当组件被单击时触发
+      onMouseEnter：当鼠标移入组件时触发
+      onMouseLeave：当鼠标移出组件时触发
+      onChange：当组件的输入值发生变化时触发
+      onSubmit：当组件的表单被提交时触发
 
 React 事件机制的流程如下：
 

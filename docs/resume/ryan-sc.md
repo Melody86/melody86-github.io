@@ -188,12 +188,13 @@ describe:
 <div id="resume-stuff">
 
 ## 作品及材料
-  1. [众安-Hybrid App 前端开发简介](https://www.yuque.com/laihui-otp81/oras88/oq8h9c?singleDoc#) 
-  2. [平安-Webpack打包及首屏加载优化.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS9XZWJwYWNr5omT5YyF5Y%2BK6aaW5bGP5Yqg6L295LyY5YyWLnBwdHg%3D)  
-  3. [平安-21年汇报.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS8yMeW5tOaAu%2Be7k%2Baxh%2BaKpS5wcHR4#)
-  4. [在校-硕士毕业答辩PPT.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cDovL3BhbmVsLmM5YWkuY29tOjgwMTIvZGVtby%2Fmr5XkuJrnrZTovqkt6LWW6L6JLnBwdHg%3D)
-  5. [在校-A Novel Texture Exemplars Extraction Approach Based on Patches Homogeneity and Defect Detection.pdf](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS9BIE5vdmVsIFRleHR1cmUgRXhlbXBsYXJzIEV4dHJhY3Rpb24gQXBwcm9hY2ggQmFzZWQgb24gUGF0Y2hlcyBIb21vZ2VuZWl0eSBhbmQgRGVmZWN0IERldGVjdGlvbi5wZGY%3D)
-  6. [在校-毕业论文.pdf](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS%2Fmr5XkuJrorr7orqEt6LWW6L6JLnBkZg%3D%3D&officePreviewType=pdf)
+  1. [众安-portal-web项目打包优化](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cDovL2M5YWkuY29tOjgwMTIvZGVtby9wb3J0YWwtd2Vi6aG555uu5omT5YyF5LyY5YyWLnBwdHg%3D)
+  2. [众安-Hybrid App 前端开发简介](https://www.yuque.com/laihui-otp81/oras88/oq8h9c?singleDoc#) 
+  3. [平安-Webpack打包及首屏加载优化.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS9XZWJwYWNr5omT5YyF5Y%2BK6aaW5bGP5Yqg6L295LyY5YyWLnBwdHg%3D)  
+  4. [平安-21年汇报.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS8yMeW5tOaAu%2Be7k%2Baxh%2BaKpS5wcHR4#)
+  5. [在校-硕士毕业答辩PPT.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cDovL3BhbmVsLmM5YWkuY29tOjgwMTIvZGVtby%2Fmr5XkuJrnrZTovqkt6LWW6L6JLnBwdHg%3D)
+  6. [在校-A Novel Texture Exemplars Extraction Approach Based on Patches Homogeneity and Defect Detection.pdf](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS9BIE5vdmVsIFRleHR1cmUgRXhlbXBsYXJzIEV4dHJhY3Rpb24gQXBwcm9hY2ggQmFzZWQgb24gUGF0Y2hlcyBIb21vZ2VuZWl0eSBhbmQgRGVmZWN0IERldGVjdGlvbi5wZGY%3D)
+  7. [在校-毕业论文.pdf](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS%2Fmr5XkuJrorr7orqEt6LWW6L6JLnBkZg%3D%3D&officePreviewType=pdf)
 
 </div>
 

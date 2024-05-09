@@ -63,7 +63,7 @@ settings.json
     "*.vue": "vue"
   },
   // 编辑器字体大小
-  "editor.fontSize": 18,
+  "editor.fontSize": 14,
   // 若设置为 true，则自动从当前 Git 仓库的默认远程仓库提取提交
   "git.autofetch": true,
   // 在没有暂存的更改时提交所有更改

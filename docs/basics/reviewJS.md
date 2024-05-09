@@ -53,6 +53,11 @@ Object.prototype.toString.call() 是最准确最常用的方式。
 const obj = new Object();
 Object.prototype.toString.call(obj) === '[object Object]' // true
 ```
+**原型的概念**
+
+每个 JavaScript 对象都有一个内置属性，称为prototype（原型）。原型对象本身也是一个对象，它也有自己的原型，依次层层向上，直到遇到一个对象的原型为 null。根据定义，null 没有原型，并作为这个原型链（prototype chain）中的最后一个环节。
+
+原型对象包含了一组属性和方法，这些属性和方法可以被该对象及其子对象继承。
 
 ## 3.浅拷贝、深拷贝
 

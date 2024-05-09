@@ -41,9 +41,9 @@ describe:
 ## 工作经验
 
 **2022年06~至今 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 众安银行(香港第一虚拟银行) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INVEST WEB &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 资深前端开发**<br>
-`主要负责众安银行基金业务线需求承接，包括离线包、基于nextjs的SSG/SSR、微服务拆分、Lowcode平台等的项目开发，持续优化活动页面的性能；`<br>
+`主要负责众安银行基金股票业务需求承接，包括离线包、基于nextjs的SSG/ISR、运营中台的微服务拆分、Lowcode平台等的项目开发，持续优化活动页面的性能；`<br>
 **2018年07~2022年05 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 平安银行股份有限公司 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 移动平台开发团队 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 前端开发** <br>
-`参与过平安银行多个公众号及期后管的建设和上线，负责过小程序、营销类游戏开发及项目管理，负责过测评、POS机缴费APP及其后台后管项目等； `
+`参与过平安银行多个公众号及其后管的建设和上线，负责过小程序、营销类游戏开发及项目管理，负责过测评、POS机缴费APP及其后台后管项目等； `
 
 ## 荣誉奖励
 
@@ -73,7 +73,7 @@ describe:
 + 项目技术: `React + nextjs + redux + zad-mobile + @antv/f2`
 + 主要职责:
   1. 对Nextjs+express的服务端渲染项目进行构建优化，从`16.58`分钟耗时缩减到`6.1`分钟等；
-  2. 货币基金落地页和新手任务（SSG）、基金专题页和公司观点（SSR）等页面的开发;
+  2. 货币基金落地页和新手任务、基金专题页和公司观点等页面的开发;
   3. 股票转入转出需求开发，梳理MPA项目打包、加载优化方案;
   4. antv/f2替换echarts 优化包体积，DOM缺省占位减少页面重排，风险声明等公共组件封装等;
   5. 基于antd组件进行转仓需求复杂表单的开发，基于redux进行数据状态管理实现数据保存和反显;
@@ -185,12 +185,13 @@ describe:
 <div id="resume-stuff">
 
 ## 作品及材料
-  1. [众安-Hybrid App 前端开发简介](https://www.yuque.com/laihui-otp81/oras88/oq8h9c?singleDoc#) 
-  2. [平安-Webpack打包及首屏加载优化.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS9XZWJwYWNr5omT5YyF5Y%2BK6aaW5bGP5Yqg6L295LyY5YyWLnBwdHg%3D)  
-  3. [平安-21年汇报.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS8yMeW5tOaAu%2Be7k%2Baxh%2BaKpS5wcHR4#)
-  4. [在校-硕士毕业答辩PPT.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cDovL3BhbmVsLmM5YWkuY29tOjgwMTIvZGVtby%2Fmr5XkuJrnrZTovqkt6LWW6L6JLnBwdHg%3D)
-  5. [在校-A Novel Texture Exemplars Extraction Approach Based on Patches Homogeneity and Defect Detection.pdf](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS9BIE5vdmVsIFRleHR1cmUgRXhlbXBsYXJzIEV4dHJhY3Rpb24gQXBwcm9hY2ggQmFzZWQgb24gUGF0Y2hlcyBIb21vZ2VuZWl0eSBhbmQgRGVmZWN0IERldGVjdGlvbi5wZGY%3D)
-  6. [在校-毕业论文.pdf](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS%2Fmr5XkuJrorr7orqEt6LWW6L6JLnBkZg%3D%3D&officePreviewType=pdf)
+  1. [众安-portal-web项目打包优化](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS9wb3J0YWwtd2Vi6aG555uu5omT5YyF5LyY5YyWMS5wcHR4)
+  2. [众安-Hybrid App 前端开发简介](https://www.yuque.com/laihui-otp81/oras88/oq8h9c?singleDoc#) 
+  3. [平安-Webpack打包及首屏加载优化.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS9XZWJwYWNr5omT5YyF5Y%2BK6aaW5bGP5Yqg6L295LyY5YyWLnBwdHg%3D)  
+  4. [平安-21年汇报.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS8yMeW5tOaAu%2Be7k%2Baxh%2BaKpS5wcHR4#)
+  5. [在校-硕士毕业答辩PPT.pptx](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cDovL3BhbmVsLmM5YWkuY29tOjgwMTIvZGVtby%2Fmr5XkuJrnrZTovqkt6LWW6L6JLnBwdHg%3D)
+  6. [在校-A Novel Texture Exemplars Extraction Approach Based on Patches Homogeneity and Defect Detection.pdf](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS9BIE5vdmVsIFRleHR1cmUgRXhlbXBsYXJzIEV4dHJhY3Rpb24gQXBwcm9hY2ggQmFzZWQgb24gUGF0Y2hlcyBIb21vZ2VuZWl0eSBhbmQgRGVmZWN0IERldGVjdGlvbi5wZGY%3D)
+  7. [在校-毕业论文.pdf](http://panel.c9ai.com:8012/onlinePreview?url=aHR0cHM6Ly9maWxlLmM5YWkuY29tL3Jlc3VtZS%2Fmr5XkuJrorr7orqEt6LWW6L6JLnBkZg%3D%3D&officePreviewType=pdf)
 
 </div>
 
